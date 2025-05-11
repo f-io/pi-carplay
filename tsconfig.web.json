@@ -11,7 +11,7 @@
     "jsx": "react-jsx",
     "target": "es2022",
     "lib": ["dom", "dom.iterable", "esnext", "WebWorker"],
-    "types": ["@webgpu/types"],
+    "types": ["@webgpu/types", "w3c-web-usb"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -24,11 +24,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
-      "@renderer/*": [
-        "src/renderer/src/*"
-      ]
+      "@renderer/*": ["renderer/src/*"],
+      "@carplay/web": ["renderer/components/web/CarplayWeb.ts"],
+      "@carplay/messages": ["main/carplay/messages/index.ts"]
     }
   }
 }

@@ -1,4 +1,4 @@
-import { DongleConfig, TouchAction, CarplayMessage, AudioData } from 'node-carplay/web'
+import { DongleConfig, TouchAction, CarplayMessage, AudioData } from '@carplay/web'
 
 export type AudioPlayerKey = string & { __brand: 'AudioPlayerKey' }
 

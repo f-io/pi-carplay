@@ -6,7 +6,7 @@ import CarplayWeb, {
   SendTouch,
   findDevice,
   decodeTypeMap,
-} from 'node-carplay/web';
+} from '@carplay/web'
 import { AudioPlayerKey } from './types';
 import type { KeyCommand } from './types';
 import { RenderEvent } from './render/RenderEvents';

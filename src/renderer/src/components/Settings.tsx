@@ -87,7 +87,7 @@ export default function Settings({ settings }: SettingsProps) {
   }, []);
 
   const renderField = (label: string, key: keyof ExtraConfig) => (
-    <Grid size={{ xs: 3 }} key={key}>
+    <Grid size={{ xs: 3 }} key={String(key)}>
       <TextField
         label={label}
         type="number"

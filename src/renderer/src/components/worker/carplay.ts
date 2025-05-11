@@ -5,7 +5,7 @@ import CarplayWeb, {
   SendCommand,
   SendTouch,
   findDevice,
-} from 'node-carplay/web'
+} from '@carplay/web'
 import { isValidCommand } from './types'
 
 type StartCommand = {

@@ -1,4 +1,4 @@
-import { DongleConfig } from 'node-carplay/node'
+import { DongleConfig } from '@carplay/messages'
 
 export type ExtraConfig = DongleConfig & {
   kiosk: boolean,

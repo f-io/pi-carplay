@@ -1,4 +1,4 @@
-import { decodeTypeMap } from 'node-carplay/web'
+import { decodeTypeMap } from '@carplay/web'
 import { AudioPlayerKey } from './types'
 
 export const createAudioPlayerKey = (decodeType: number, audioType: number) => {

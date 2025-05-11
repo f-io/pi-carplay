@@ -6,7 +6,8 @@ import React, {
   useRef,
   useState,
 } from "react"
-import { findDevice, CommandMapping } from "node-carplay/web"
+import { findDevice } from '@carplay/web'
+import { CommandMapping } from '../../../main/carplay/messages/common'
 import useCarplayAudio from "./useCarplayAudio"
 import { CarPlayWorker, KeyCommand } from "./worker/types"
 import { useCarplayTouch } from "./useCarplayTouch"
