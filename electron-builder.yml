@@ -14,6 +14,7 @@ files:
 
 asarUnpack:
   - resources/**
+  - node_modules/usb/**
 
 linux:
   target:
@@ -26,7 +27,7 @@ linux:
 appImage:
   artifactName: ${name}-${version}-${arch}.${ext}
 
-npmRebuild: false
+npmRebuild: true
 
 publish:
   provider: generic
