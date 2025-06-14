@@ -38,7 +38,7 @@ sudo udevadm trigger
 # 3) Install runtime dependencies for node-usb + FUSE
 echo "→ Installing runtime dependencies"
 sudo apt-get update
-pkgs=(fuse libfuse2 libusb-1.0-0 libudev1)
+pkgs=(libusb-1.0-0 libudev1)
 for pkg in "${pkgs[@]}"; do
   printf "   %-15s " "$pkg"
   if dpkg-query -W --showformat='${Status}\n' "$pkg" 2>/dev/null | grep -q "install ok installed"; then
