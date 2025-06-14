@@ -50,7 +50,7 @@ jobs:
         run: |
           sudo apt-get update
           build_pkgs=(build-essential python3 python3-dev libusb-1.0-0-dev libudev-dev pkg-config)
-          runtime_pkgs=(fuse libfuse2 libusb-1.0-0 libudev1)
+          runtime_pkgs=(libusb-1.0-0 libudev1)
           for pkg in "${build_pkgs[@]}";   do dpkg-query -W "$pkg" 2>/dev/null | grep -q "install ok" || sudo apt-get install -y "$pkg"; done
           for pkg in "${runtime_pkgs[@]}"; do dpkg-query -W "$pkg" 2>/dev/null | grep -q "install ok" || sudo apt-get install -y "$pkg"; done
 
@@ -114,7 +114,7 @@ jobs:
             apt-get install -y curl
             curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
             apt-get install -y nodejs
-            apt-get install -y build-essential python3 python3-dev libusb-1.0-0-dev libudev-dev pkg-config fuse libfuse2 libusb-1.0-0 libudev1
+            apt-get install -y build-essential python3 python3-dev libusb-1.0-0-dev libudev-dev pkg-config libusb-1.0-0 libudev1
             echo "==> Waiting for file system to settle (QEMU workaround)..."
             sleep 5
             npm install --unsafe-perm --no-audit --loglevel=verbose

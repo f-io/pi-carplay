@@ -18,7 +18,7 @@ asarUnpack:
 
 linux:
   target:
-    - AppImage
+    - AppImage 
   icon: icons/linux/pi-carplay.png   
   maintainer: "Lasse Heitgres <hello@f-io.dev>"
   category: Utility
