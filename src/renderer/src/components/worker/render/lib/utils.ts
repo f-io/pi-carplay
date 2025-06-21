@@ -21,47 +21,66 @@ export function getNaluFromStream(
   streamType: StreamType = 'annexB'
 ): GetNaluResult | null {
   const stream = new NALUStream(buffer, { type: streamType })
-
   for (const nalu of stream.nalus()) {
     if (!nalu?.nalu || nalu.nalu.length < 4) continue
-
     const bitstream = new Bitstream(nalu.nalu)
     bitstream.seek(3)
-    const nal_unit_type = bitstream.u(5)
-
-    if (nal_unit_type === type) {
-      return {
-        nalu: nalu.nalu,
-        rawNalu: nalu.rawNalu!,
-        type: nal_unit_type,
-      }
+    const nalUnitType = bitstream.u(5)
+    if (nalUnitType === type) {
+      return { nalu: nalu.nalu, rawNalu: nalu.rawNalu!, type: nalUnitType }
     }
   }
-
-  return null
-}
-
-export function getDecoderConfig(data: Uint8Array): VideoDecoderConfig | null {
-  for (const type of ['annexB', 'packet'] as StreamType[]) {
-    try {
-      const result = getNaluFromStream(data, NaluTypes.SPS, type)
-      if (result) {
-        const sps = new SPS(result.nalu)
-        return {
-          codec: sps.MIME,
-          codedHeight: sps.picHeight,
-          codedWidth: sps.picWidth,
-          hardwareAcceleration: 'prefer-software',
-        }
-      }
-    } catch (e) {
-      console.warn(`[DecoderConfig] Failed to parse SPS from ${type} stream:`, e)
-    }
-  }
-
   return null
 }
 
 export function isKeyFrame(data: Uint8Array): boolean {
   return !!getNaluFromStream(data, NaluTypes.IDR)
+}
+
+export interface DecoderOptions {
+  preferHardware?: boolean
+}
+
+export function getDecoderConfig(
+  data: Uint8Array,
+  options: DecoderOptions = {}
+): VideoDecoderConfig | null {
+  for (const st of ['annexB', 'packet'] as StreamType[]) {
+    try {
+      const result = getNaluFromStream(data, NaluTypes.SPS, st)
+      if (result) {
+        const sps = new SPS(result.nalu)
+        return {
+          codec: sps.MIME,
+          codedWidth: sps.picWidth,
+          codedHeight: sps.picHeight
+        }
+      }
+    } catch (e) {
+      console.warn(`[lib/utils] getDecoderConfig failed for ${st} stream:`, e)
+    }
+  }
+  return null
+}
+
+export async function configureDecoder(
+  decoder: VideoDecoder,
+  config: VideoDecoderConfig,
+  preferHardware = false
+): Promise<VideoDecoderConfig> {
+  let finalConfig: VideoDecoderConfig = { ...config, hardwareAcceleration: 'prefer-software' }
+
+  if (preferHardware) {
+    try {
+      const hwConfig: VideoDecoderConfig = { ...config, hardwareAcceleration: 'prefer-hardware' }
+      const support = await VideoDecoder.isConfigSupported(hwConfig)
+      if (support.supported && support.config) {
+        finalConfig = support.config
+      }
+    } catch {
+    }
+  }
+
+  decoder.configure(finalConfig)
+  return finalConfig
 }
