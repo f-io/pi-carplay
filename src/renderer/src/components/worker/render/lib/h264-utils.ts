@@ -15,14 +15,14 @@ export const profileNames: Map<number, string> = new Map([
   [110, 'FREXT_Hi10P'],
   [122, 'FREXT_Hi422'],
   [244, 'FREXT_Hi444'],
-  [44, 'FREXT_CAVLC444'],
+  [44, 'FREXT_CAVLC444']
 ])
 
 export const chromaFormatValues = {
   0: 'YUV400',
   1: 'YUV420',
   2: 'YUV422',
-  3: 'YUV444',
+  3: 'YUV444'
 }
 
 // noinspection DuplicatedCode
@@ -80,7 +80,7 @@ export class RawBitstream {
       if (i === n - 1 || i % 4 === 3) {
         hexstrings.push(nibble.toString(16))
         let bitstring = ''
-        bits.forEach(bit => {
+        bits.forEach((bit) => {
           bitstring += bit === 0 ? '0' : '1'
         })
         bitstrings.push(bitstring)
@@ -128,12 +128,7 @@ export class RawBitstream {
    * @param {number} count the number of bits to copy
    * @param {number|undefined} to the starting bit position to receive the copy, or the current pointer
    */
-  copyBits(
-    from: RawBitstream,
-    ptr: number,
-    count: number,
-    to: number | undefined,
-  ) {
+  copyBits(from: RawBitstream, ptr: number, count: number, to: number | undefined) {
     /* this is a little intricate for the sake of performance */
     this.reallocate(count)
     /* handle pointer saving. */
@@ -240,8 +235,7 @@ export class RawBitstream {
    * put one bit
    */
   put_u_1(b: number) {
-    if (this.ptr + 1 > this.max)
-      throw new Error('NALUStream error: bitstream exhausted')
+    if (this.ptr + 1 > this.max) throw new Error('NALUStream error: bitstream exhausted')
     const p = this.ptr >> 3
     const o = 0x07 - (this.ptr & 0x07)
     const val = b << o
@@ -256,8 +250,7 @@ export class RawBitstream {
    * @returns {number}
    */
   u_1() {
-    if (this.ptr + 1 > this.max)
-      throw new Error('NALUStream error: bitstream exhausted')
+    if (this.ptr + 1 > this.max) throw new Error('NALUStream error: bitstream exhausted')
     const p = this.ptr >> 3
     const o = 0x07 - (this.ptr & 0x07)
     const val = (this.buffer[p]! >> o) & 0x01
@@ -288,8 +281,7 @@ export class RawBitstream {
    */
   u(n: number) {
     if (n === 8) return this.u_8()
-    if (this.ptr + n >= this.max)
-      throw new Error('NALUStream error: bitstream exhausted')
+    if (this.ptr + n >= this.max) throw new Error('NALUStream error: bitstream exhausted')
     let val = 0
     for (let i = 0; i < n; i++) {
       val = (val << 1) | this.u_1()
@@ -302,8 +294,7 @@ export class RawBitstream {
    * @returns {number}
    */
   u_8() {
-    if (this.ptr + 8 > this.max)
-      throw new Error('NALUStream error: bitstream exhausted')
+    if (this.ptr + 8 > this.max) throw new Error('NALUStream error: bitstream exhausted')
     const o = this.ptr & 0x07
     if (o === 0) {
       const val = this.buffer[this.ptr >> 3]
@@ -315,9 +306,7 @@ export class RawBitstream {
       const lmask = ~rmask & 0xff
       const p = this.ptr >> 3
       this.ptr += 8
-      return (
-        ((this.buffer[p]! & lmask) << o) | ((this.buffer[p + 1]! & rmask) >> n)
-      )
+      return ((this.buffer[p]! & lmask) << o) | ((this.buffer[p + 1]! & rmask) >> n)
     }
   }
 
@@ -488,13 +477,7 @@ export class Bitstream extends RawBitstream {
     buf[q++] = stream[p++]!
     /* remove emulation prevention:  00 00 03 00  means 00 00 00, 00 00 03 01 means 00 00 01 */
     while (p < len) {
-      if (
-        stream[p - 2] === 0 &&
-        stream[p - 1] === 0 &&
-        stream[p] === 3 &&
-        stream[p]! <= 3
-      )
-        p++
+      if (stream[p - 2] === 0 && stream[p - 1] === 0 && stream[p] === 3 && stream[p]! <= 3) p++
       else buf[q++] = stream[p++]!
     }
     buf[q++] = stream[p++]!
@@ -512,9 +495,7 @@ export class NALUStream {
   buf: Uint8Array
   boxSize: number | null
   cursor: number
-  nextPacket:
-    | ((buf: Uint8Array, p: number, boxSize: number) => NextPackageResult)
-    | undefined
+  nextPacket: ((buf: Uint8Array, p: number, boxSize: number) => NextPackageResult) | undefined
 
   /**
    * Construct a NALUStream from a buffer, figuring out what kind of stream it
@@ -535,7 +516,7 @@ export class NALUStream {
       boxSize?: number
       boxSizeMinusOne?: number
       type: StreamType
-    },
+    }
   ) {
     this.strict = false
     this.type = null
@@ -545,8 +526,7 @@ export class NALUStream {
     this.nextPacket = undefined
 
     if (options) {
-      if (typeof options.strict === 'boolean')
-        this.strict = Boolean(options.strict)
+      if (typeof options.strict === 'boolean') this.strict = Boolean(options.strict)
       if (options.boxSizeMinusOne) this.boxSize = options.boxSizeMinusOne + 1
       if (options.boxSize) this.boxSize = options.boxSize
       if (options.type) this.type = options.type
@@ -565,10 +545,7 @@ export class NALUStream {
       this.type = type
       this.boxSize = boxSize
     }
-    this.nextPacket =
-      this.type === 'packet'
-        ? this.nextLengthCountedPacket
-        : this.nextAnnexBPacket
+    this.nextPacket = this.type === 'packet' ? this.nextLengthCountedPacket : this.nextAnnexBPacket
   }
 
   get boxSizeMinusOne() {
@@ -617,8 +594,8 @@ export class NALUStream {
   static array2hex(array: Uint8Array) {
     // buffer is an ArrayBuffer
     return Array.prototype.map
-      .call(new Uint8Array(array.buffer, array.byteOffset, array.byteLength), x =>
-        ('00' + x.toString(16)).slice(-2),
+      .call(new Uint8Array(array.buffer, array.byteOffset, array.byteLength), (x) =>
+        ('00' + x.toString(16)).slice(-2)
       )
       .join(' ')
   }
@@ -640,7 +617,7 @@ export class NALUStream {
         delim = this.nextPacket?.(this.buf, delim.n, this.boxSize!) ?? {
           n: 0,
           s: 0,
-          e: 0,
+          e: 0
         }
         while (true) {
           if (delim.e > delim.s) {
@@ -651,11 +628,11 @@ export class NALUStream {
           delim = this.nextPacket?.(this.buf, delim.n, this.boxSize!) ?? {
             n: 0,
             s: 0,
-            e: 0,
+            e: 0
           }
         }
         return { value: undefined, done: true }
-      },
+      }
     }
   }
 
@@ -680,28 +657,25 @@ export class NALUStream {
             delim = this.nextPacket?.(this.buf, delim.n, this.boxSize!) ?? {
               n: 0,
               s: 0,
-              e: 0,
+              e: 0
             }
             while (true) {
               if (delim.e > delim.s) {
                 const nalu = this.buf.subarray(delim.s, delim.e)
-                const rawNalu = this.buf.subarray(
-                  delim.s - this.boxSize!,
-                  delim.e,
-                )
+                const rawNalu = this.buf.subarray(delim.s - this.boxSize!, delim.e)
                 return { value: { nalu, rawNalu }, done: false }
               }
               if (delim.n < 0) break
               delim = this.nextPacket?.(this.buf, delim.n, this.boxSize!) ?? {
                 n: 0,
                 s: 0,
-                e: 0,
+                e: 0
               }
             }
             return { value: undefined, done: true }
-          },
+          }
         }
-      },
+      }
     }
   }
 
@@ -730,7 +704,7 @@ export class NALUStream {
         const len = last - first
         if (this.strict && 0xff && len >> 24 !== 0)
           throw new Error(
-            'NALUStream error: Packet too long to store length when boxLenMinusOne is 2',
+            'NALUStream error: Packet too long to store length when boxLenMinusOne is 2'
           )
         buff[p++] = 0xff & (len >> 16)
         buff[p++] = 0xff & (len >> 8)
@@ -770,18 +744,14 @@ export class NALUStream {
     return this
   }
 
-  iterate(
-    callback:
-      | ((buf: Uint8Array, s: number, e: number) => void)
-      | undefined = undefined,
-  ) {
+  iterate(callback: ((buf: Uint8Array, s: number, e: number) => void) | undefined = undefined) {
     if (this.type === 'unknown') return 0
     if (this.boxSize! < 1) return 0
     let packetCount = 0
     let delim = this.nextPacket?.(this.buf, 0, this.boxSize!) ?? {
       n: 0,
       s: 0,
-      e: 0,
+      e: 0
     }
     while (true) {
       if (delim.e > delim.s) {
@@ -792,7 +762,7 @@ export class NALUStream {
       delim = this.nextPacket?.(this.buf, delim.n, this.boxSize!) ?? {
         n: 0,
         s: 0,
-        e: 0,
+        e: 0
       }
     }
     return packetCount
@@ -846,7 +816,7 @@ export class NALUStream {
       return {
         n: p + boxSize + plength,
         s: p + boxSize,
-        e: p + boxSize + plength,
+        e: p + boxSize + plength
       }
     }
     return { n: -1, s: 0, e: 0, message: 'end of buffer' }
@@ -857,18 +827,12 @@ export class NALUStream {
    * @returns {{boxSize: number, type: string}}
    */
   getType = (scanLimit: number): { boxSize: number; type: StreamType } => {
-    if (this.type && this.boxSize)
-      return { type: this.type, boxSize: this.boxSize }
+    if (this.type && this.boxSize) return { type: this.type, boxSize: this.boxSize }
     /* start with a delimiter? */
     if (!this.type || this.type === 'annexB') {
       if (this.buf[0] === 0 && this.buf[1] === 0 && this.buf[2] === 1) {
         return { type: 'annexB', boxSize: 3 }
-      } else if (
-        this.buf[0] === 0 &&
-        this.buf[1] === 0 &&
-        this.buf[2] === 0 &&
-        this.buf[3] === 1
-      ) {
+      } else if (this.buf[0] === 0 && this.buf[1] === 0 && this.buf[2] === 0 && this.buf[3] === 1) {
         return { type: 'annexB', boxSize: 4 }
       }
     }
@@ -897,10 +861,7 @@ export class NALUStream {
         return { type: 'packet', boxSize: boxSize }
       }
     }
-    if (this.strict)
-      throw new Error(
-        'NALUStream error: cannot determine stream type or box size',
-      )
+    if (this.strict) throw new Error('NALUStream error: cannot determine stream type or box size')
     return { type: 'unknown', boxSize: -1 }
   }
 }
@@ -1009,8 +970,7 @@ export class SPS {
     this.constraint_set4_flag = bitstream.u_1()
     this.constraint_set5_flag = bitstream.u_1()
     const reserved_zero_2bits = bitstream.u_2()
-    if (reserved_zero_2bits !== 0)
-      throw new Error('SPS error: reserved_zero_2bits must be zero')
+    if (reserved_zero_2bits !== 0) throw new Error('SPS error: reserved_zero_2bits must be zero')
 
     this.level_idc = bitstream.u_8()!
 
@@ -1019,9 +979,7 @@ export class SPS {
       throw new Error('SPS error: seq_parameter_set_id must be 31 or less')
 
     this.has_no_chroma_format_idc =
-      this.profile_idc === 66 ||
-      this.profile_idc === 77 ||
-      this.profile_idc === 88
+      this.profile_idc === 66 || this.profile_idc === 77 || this.profile_idc === 88
 
     if (!this.has_no_chroma_format_idc) {
       this.chroma_format_idc = bitstream.ue_v()
@@ -1030,9 +988,7 @@ export class SPS {
       if (this.chroma_format_idc === 3) {
         /* 3 = YUV444 */
         this.separate_colour_plane_flag = bitstream.u_1()
-        this.chromaArrayType = this.separate_colour_plane_flag
-          ? 0
-          : this.chroma_format_idc
+        this.chromaArrayType = this.separate_colour_plane_flag ? 0 : this.chroma_format_idc
       }
       this.bit_depth_luma_minus8 = bitstream.ue_v()
       if (this.bit_depth_luma_minus8 > 6)
@@ -1084,11 +1040,8 @@ export class SPS {
       case 0:
         this.log2_max_pic_order_cnt_lsb_minus4 = bitstream.ue_v()
         if (this.log2_max_pic_order_cnt_lsb_minus4 > 12)
-          throw new Error(
-            'SPS error: log2_max_pic_order_cnt_lsb_minus4 must be 12 or less',
-          )
-        this.maxPicOrderCntLsb =
-          1 << (this.log2_max_pic_order_cnt_lsb_minus4 + 4)
+          throw new Error('SPS error: log2_max_pic_order_cnt_lsb_minus4 must be 12 or less')
+        this.maxPicOrderCntLsb = 1 << (this.log2_max_pic_order_cnt_lsb_minus4 + 4)
         break
       case 1:
         this.delta_pic_order_always_zero_flag = bitstream.u_1()
@@ -1120,9 +1073,7 @@ export class SPS {
       this.mb_adaptive_frame_field_flag = bitstream.u_1()
     }
     this.picHeight =
-      ((2 - this.frame_mbs_only_flag) *
-        (this.pic_height_in_map_units_minus_1 + 1)) <<
-      4
+      ((2 - this.frame_mbs_only_flag) * (this.pic_height_in_map_units_minus_1 + 1)) << 4
 
     this.direct_8x8_inference_flag = bitstream.u_1()
     this.frame_cropping_flag = bitstream.u_1()
@@ -1136,19 +1087,17 @@ export class SPS {
         y: this.frame_cropping_rect_top_offset,
         width:
           this.picWidth -
-          (this.frame_cropping_rect_left_offset +
-            this.frame_cropping_rect_right_offset),
+          (this.frame_cropping_rect_left_offset + this.frame_cropping_rect_right_offset),
         height:
           this.picHeight -
-          (this.frame_cropping_rect_top_offset +
-            this.frame_cropping_rect_bottom_offset),
+          (this.frame_cropping_rect_top_offset + this.frame_cropping_rect_bottom_offset)
       }
     } else {
       this.cropRect = {
         x: 0,
         y: 0,
         width: this.picWidth,
-        height: this.picHeight,
+        height: this.picHeight
       }
     }
     this.vui_parameters_present_flag = bitstream.u_1()
@@ -1163,8 +1112,7 @@ export class SPS {
       }
 
       this.overscan_info_present_flag = bitstream.u_1()
-      if (this.overscan_info_present_flag)
-        this.overscan_appropriate_flag = bitstream.u_1()
+      if (this.overscan_info_present_flag) this.overscan_appropriate_flag = bitstream.u_1()
       this.video_signal_type_present_flag = bitstream.u_1()
       if (this.video_signal_type_present_flag) {
         this.video_format = bitstream.u(3)
@@ -1186,11 +1134,7 @@ export class SPS {
         this.num_units_in_tick = bitstream.u(32)
         this.time_scale = bitstream.u(32)
         this.fixed_frame_rate_flag = bitstream.u_1()
-        if (
-          this.num_units_in_tick &&
-          this.time_scale &&
-          this.num_units_in_tick > 0
-        ) {
+        if (this.num_units_in_tick && this.time_scale && this.num_units_in_tick > 0) {
           this.framesPerSecond = this.time_scale / (2 * this.num_units_in_tick)
         }
       }

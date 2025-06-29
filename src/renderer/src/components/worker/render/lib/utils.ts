@@ -6,7 +6,7 @@ export enum NaluTypes {
   SEI = 6,
   SPS = 7,
   PPS = 8,
-  AUD = 9,
+  AUD = 9
 }
 
 export interface GetNaluResult {
@@ -21,47 +21,45 @@ export function getNaluFromStream(
   streamType: StreamType = 'annexB'
 ): GetNaluResult | null {
   const stream = new NALUStream(buffer, { type: streamType })
-
   for (const nalu of stream.nalus()) {
     if (!nalu?.nalu || nalu.nalu.length < 4) continue
-
-    const bitstream = new Bitstream(nalu.nalu)
-    bitstream.seek(3)
-    const nal_unit_type = bitstream.u(5)
-
-    if (nal_unit_type === type) {
+    const bs = new Bitstream(nalu.nalu)
+    bs.seek(3)
+    const nalUnitType = bs.u(5)
+    if (nalUnitType === type) {
       return {
         nalu: nalu.nalu,
         rawNalu: nalu.rawNalu!,
-        type: nal_unit_type,
+        type: nalUnitType
       }
     }
   }
-
   return null
 }
 
-export function getDecoderConfig(data: Uint8Array): VideoDecoderConfig | null {
-  for (const type of ['annexB', 'packet'] as StreamType[]) {
+export function getDecoderConfig(
+  data: Uint8Array
+): { codec: string; codedWidth: number; codedHeight: number } | null {
+  for (const st of ['annexB', 'packet'] as StreamType[]) {
     try {
-      const result = getNaluFromStream(data, NaluTypes.SPS, type)
-      if (result) {
-        const sps = new SPS(result.nalu)
+      const res = getNaluFromStream(data, NaluTypes.SPS, st)
+      if (res) {
+        const sps = new SPS(res.nalu)
         return {
           codec: sps.MIME,
-          codedHeight: sps.picHeight,
           codedWidth: sps.picWidth,
-          hardwareAcceleration: 'prefer-software',
+          codedHeight: sps.picHeight
         }
       }
     } catch (e) {
-      console.warn(`[DecoderConfig] Failed to parse SPS from ${type} stream:`, e)
+      console.warn(`[lib/utils] getDecoderConfig failed for ${st}:`, e)
     }
   }
-
   return null
 }
 
 export function isKeyFrame(data: Uint8Array): boolean {
   return !!getNaluFromStream(data, NaluTypes.IDR)
 }
+
+export { SPS } from './h264-utils'
