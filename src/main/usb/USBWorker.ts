@@ -22,5 +22,5 @@ parentPort.on('message', (msg: IncomingMsg) => {
       }
     : { type: 'dongle-status', connected: false };
 
-  parentPort.postMessage(response);
+  parentPort!.postMessage(response);
 });
