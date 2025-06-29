@@ -3,11 +3,34 @@ import { join, extname } from 'path';
 import { existsSync, createReadStream, readFileSync, writeFileSync } from 'fs';
 import { electronApp, is } from '@electron-toolkit/utils';
 import { DEFAULT_CONFIG } from '@carplay/node';
-
 import { Socket } from './Socket';
 import { ExtraConfig, KeyBindings } from './Globals';
 import { USBService } from './usb/USBService';
 import { CarplayService } from './carplay/CarplayService';
+
+app.commandLine.appendSwitch('enable-features',
+  [
+    // Linux-specific
+    'VaapiVideoDecodeLinuxGL',
+    'AcceleratedVideoDecodeLinuxZeroCopyGL'
+  ].join(',')
+);
+
+app.commandLine.appendSwitch('ignore-gpu-blocklist');
+app.commandLine.appendSwitch('enable-zero-copy');
+app.commandLine.appendSwitch('enable-gpu-rasterization');
+app.commandLine.appendSwitch('enable-accelerated-video-decode');
+
+if (process.platform === 'darwin') {
+  app.commandLine.appendSwitch('enable-unsafe-webgpu');
+  app.commandLine.appendSwitch('enable-dawn-features');
+}
+
+// GPU info log
+app.on('gpu-info-update', () => {
+  console.log('GPU Info:', app.getGPUFeatureStatus());
+});
+
 
 const mimeTypeFromExt = (ext: string): string =>
   ({
@@ -152,7 +175,8 @@ function createWindow(): void {
       nodeIntegration: false,
       contextIsolation: true,
       webSecurity: true,
-      allowRunningInsecureContent: false
+      allowRunningInsecureContent: false,
+      experimentalFeatures: true,
     }
   });
 
@@ -193,6 +217,20 @@ function createWindow(): void {
 
   // macOS hide
   mainWindow.on('close', (e) => { if (process.platform==='darwin'&&!isQuitting){ e.preventDefault(); mainWindow?.hide(); }});
+
+  // chrome://gpu
+  if (is.dev) {
+    const gpuWindow = new BrowserWindow({
+      width: 1000,
+      height: 800,
+      title: 'GPU Info',
+      webPreferences: {
+        nodeIntegration: false,
+        contextIsolation: true
+      }
+    });
+    gpuWindow.loadURL('chrome://gpu');
+  }
 }
 
 // App‑Lifecycle

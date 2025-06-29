@@ -116,10 +116,9 @@ export class RendererWorker {
     if (this.hardwareAccelerationTested) return
 
     console.debug('[RENDER.WORKER] Starting hardware acceleration tests...')
-    const platform = self.navigator.platform.toLowerCase()
 
-    // Plattformabhängige Priorisierung: [Hardware, Software]
-    const priorities = platform.includes('darwin')
+    const isMac = navigator.platform.startsWith('Mac')
+    const priorities = isMac
       ? [
           ['webgpu', 'webgl2', 'webgl'],
           ['webgpu', 'webgl2', 'webgl']
