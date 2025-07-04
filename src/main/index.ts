@@ -8,19 +8,31 @@ import { ExtraConfig, KeyBindings } from './Globals'
 import { USBService } from './usb/USBService'
 import { CarplayService } from './carplay/CarplayService'
 
+// Important: On Linux, enabling VA-API flags breaks WebCodecs’ hardware fallback path.
+// Requesting ‘prefer-hardware’ without a valid VA-API backend will immediately close the decoder.
+// Therefore on Linux we default to ‘prefer-software’ and only switch to hardware after confirming support.
+// On macOS, the WebCodecs hardware accelerator is available, so this Linux-specific fallback logic is not needed.
+
+// Feature-Flags
 app.commandLine.appendSwitch(
   'enable-features',
   [
-    // Linux-specific
-    'VaapiVideoDecodeLinuxGL',
+    'AcceleratedVideoEncoder',
+    'AcceleratedVideoDecodeLinuxGL',
     'AcceleratedVideoDecodeLinuxZeroCopyGL'
   ].join(',')
 )
 
+// EGL/ANGLE for OpenGL
+app.commandLine.appendSwitch('use-gl', 'angle')
+app.commandLine.appendSwitch('use-angle', 'gl')
+
+// Disable blocklist & workarounds
 app.commandLine.appendSwitch('ignore-gpu-blocklist')
-app.commandLine.appendSwitch('enable-zero-copy')
+app.commandLine.appendSwitch('disable-gpu-driver-bug-workaround')
+
+// GPU rasterization
 app.commandLine.appendSwitch('enable-gpu-rasterization')
-app.commandLine.appendSwitch('enable-accelerated-video-decode')
 
 if (process.platform === 'darwin') {
   app.commandLine.appendSwitch('enable-unsafe-webgpu')
@@ -79,20 +91,20 @@ const carplayService = new CarplayService()
 
 if (process.platform === 'darwin') {
   app.on('before-quit', async (e) => {
-    if (isQuitting) return;
-    isQuitting = true;
-    e.preventDefault();
+    if (isQuitting) return
+    isQuitting = true
+    e.preventDefault()
 
     try {
-      await carplayService.stop();
-      await usbService.stop();
-      await new Promise(r => setTimeout(r, 100));
+      await carplayService.stop()
+      await usbService.stop()
+      await new Promise((r) => setTimeout(r, 100))
     } catch (err) {
-      console.warn('Error while quitting:', err);
+      console.warn('Error while quitting:', err)
     } finally {
-      app.exit(0);
+      app.exit(0)
     }
-  });
+  })
 }
 
 // Protocol & Config
@@ -250,6 +262,19 @@ function createWindow(): void {
       }
     })
     gpuWindow.loadURL('chrome://gpu')
+  }
+  // chrome://media-internals
+  if (is.dev) {
+    const mediaWindow = new BrowserWindow({
+      width: 1000,
+      height: 800,
+      title: 'GPU Info',
+      webPreferences: {
+        nodeIntegration: false,
+        contextIsolation: true
+      }
+    })
+    mediaWindow.loadURL('chrome://media-internals')
   }
 }
 
