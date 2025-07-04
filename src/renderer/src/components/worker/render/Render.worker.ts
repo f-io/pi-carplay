@@ -117,38 +117,35 @@ export class RendererWorker {
 
     console.debug('[RENDER.WORKER] Starting hardware acceleration tests...')
 
-    const isMac = navigator.platform.startsWith('Mac')
-    const priorities = isMac
-      ? [
-          ['webgpu', 'webgl2', 'webgl'],
-          ['webgpu', 'webgl2', 'webgl']
-        ]
-      : [
-          ['webgl2', 'webgl', 'webgpu'],
-          ['webgl2', 'webgl', 'webgpu']
-        ]
+    const platform = navigator.platform.toLowerCase()
+    const isMac = platform.startsWith('mac')
+    const isLinux = platform.includes('linux')
+
+    const rendererPriority = isMac ? ['webgpu', 'webgl2', 'webgl'] : ['webgl2', 'webgl', 'webgpu']
 
     const results: Record<string, { hw: boolean; sw: boolean; available: boolean }> = {}
-
-    for (const r of new Set(priorities.flat())) {
-      const test = await this.isRendererSupported(r)
-      results[r] = test
+    for (const r of rendererPriority) {
+      results[r] = await this.isRendererSupported(r)
       console.debug(
-        `[RENDER.WORKER] ${r.toUpperCase()} ${
-          test.available ? 'available' : 'unavailable'
-        }, HW/SW: ${test.hw}/${test.sw}`
+        `[RENDER.WORKER] ${r.toUpperCase()}: available=${results[r].available}, ` +
+          `hw=${results[r].hw}, sw=${results[r].sw}`
       )
     }
 
-    for (let i = 0; i < priorities.length; i++) {
-      const mode = i === 0 ? 'hw' : 'sw'
-      for (const r of priorities[i]) {
-        const res = results[r]
-        if (res.available && res[mode]) {
+    // Linux: sw -> hw & Darwin: hw -> sw
+    const selectOrder: ('hw' | 'sw')[] = isLinux ? ['sw', 'hw'] : ['hw', 'sw']
+
+    for (const mode of selectOrder) {
+      for (const r of rendererPriority) {
+        const caps = results[r]
+        if (caps.available && caps[mode]) {
           this.selectedRenderer = r
           this.useHardware = mode === 'hw'
           this.hardwareAccelerationTested = true
-          console.debug(`[RENDER.WORKER] Selected renderer: ${r} (${mode})`)
+          console.debug(
+            `[RENDER.WORKER] Selected renderer: ${r} (` +
+              `${mode === 'hw' ? 'hardware' : 'software'})`
+          )
           return
         }
       }
