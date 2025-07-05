@@ -251,7 +251,7 @@ export class VideoData extends Message {
   }
 }
 
-enum MediaType {
+export enum MediaType {
   Data = 1,
   AlbumCover = 3,
 }

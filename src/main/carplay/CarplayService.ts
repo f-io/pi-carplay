@@ -6,6 +6,7 @@ import {
   VideoData,
   AudioData,
   MediaData,
+  MediaType,
   Command,
   SendCommand,
   SendTouch,
@@ -22,6 +23,29 @@ import usb from 'usb'
 import NodeMicrophone from './node/NodeMicrophone'
 
 let dongleConnected = false
+
+interface PersistedMediaPayload {
+  type: MediaType
+  media?: Record<string, any>
+  base64Image?: string
+}
+
+type PersistedMediaFile = {
+  timestamp: string
+  payload: PersistedMediaPayload
+}
+
+function readMediaFile(filePath: string): PersistedMediaFile {
+  try {
+    const raw = fs.readFileSync(filePath, 'utf8')
+    return JSON.parse(raw) as PersistedMediaFile
+  } catch {
+    return {
+      timestamp: '',
+      payload: { type: MediaType.Data, media: {}, base64Image: undefined }
+    }
+  }
+}
 
 export class CarplayService {
   private driver = new DongleDriver()
@@ -102,7 +126,35 @@ export class CarplayService {
           }
         }
       } else if (msg instanceof MediaData) {
-        this.webContents.send('carplay-event', { type: 'media', payload: msg })
+        this.webContents!.send('carplay-event', { type: 'media', payload: msg })
+        const file = path.join(app.getPath('userData'), 'mediaData.json')
+        const existing = readMediaFile(file)
+        const existingPayload = existing.payload
+        const newPayload: PersistedMediaPayload = {
+          type: msg.payload!.type
+        }
+        if (msg.payload!.type === MediaType.Data && msg.payload!.media) {
+          newPayload.media = {
+            ...existingPayload.media,
+            ...msg.payload!.media
+          }
+          if (existingPayload.base64Image) {
+            newPayload.base64Image = existingPayload.base64Image
+          }
+        } else if (msg.payload!.type === MediaType.AlbumCover && msg.payload!.base64Image) {
+          newPayload.base64Image = msg.payload!.base64Image
+          if (existingPayload.media) {
+            newPayload.media = existingPayload.media
+          }
+        } else {
+          newPayload.media = existingPayload.media
+          newPayload.base64Image = existingPayload.base64Image
+        }
+        const out = {
+          timestamp: new Date().toISOString(),
+          payload: newPayload
+        }
+        fs.writeFileSync(file, JSON.stringify(out, null, 2), 'utf8')
       } else if (msg instanceof Command) {
         this.webContents.send('carplay-event', { type: 'command', message: msg })
       }
