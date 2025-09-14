@@ -8,37 +8,69 @@ import { ExtraConfig, KeyBindings } from './Globals'
 import { USBService } from './usb/USBService'
 import { CarplayService } from './carplay/CarplayService'
 
-// Important: On Linux, enabling VA-API flags breaks WebCodecs’ hardware fallback path.
-// Requesting ‘prefer-hardware’ without a valid VA-API backend will immediately close the decoder.
-// Therefore on Linux we default to ‘prefer-software’ and only switch to hardware after confirming support.
-// On macOS, the WebCodecs hardware accelerator is available, so this Linux-specific fallback logic is not needed.
+// ─────────────────────────────────────────────────────────────────────────────
+// Feature flags: WebGPU on macOS, Vulkan + HW decode on Linux x86,
+// ANGLE+GLES on ARM (Pi) with VA-API disabled.
+// ─────────────────────────────────────────────────────────────────────────────
 
-// Feature-Flags
-if (process.platform === 'linux') {
-  app.commandLine.appendSwitch(
-    'enable-features',
-    [
-      'AcceleratedVideoEncoder',
-      'AcceleratedVideoDecodeLinuxGL',
-      'AcceleratedVideoDecodeLinuxZeroCopyGL'
-    ].join(',')
-  )
+const isLinux = process.platform === 'linux'
+const isMac = process.platform === 'darwin'
+const isArm = process.arch === 'arm' || process.arch === 'arm64'
+const isX86 = process.arch === 'x64' || process.arch === 'ia32'
 
-  // EGL/ANGLE for OpenGL
-  app.commandLine.appendSwitch('use-gl', 'angle')
-  app.commandLine.appendSwitch('use-angle', 'gles')
-
-  // Disable blocklist & workarounds
-  app.commandLine.appendSwitch('ignore-gpu-blocklist')
-
-  // GPU rasterization
-  app.commandLine.appendSwitch('enable-gpu-rasterization')
+// Chromium feature lists without overwriting previous values
+function addFeatures(key: 'enable-features' | 'disable-features', list: string[]) {
+  const prev = app.commandLine.getSwitchValue(key)
+  const merged = new Set(prev ? prev.split(',').filter(Boolean) : [])
+  list.forEach((f) => merged.add(f))
+  app.commandLine.appendSwitch(key, [...merged].join(','))
 }
 
-if (process.platform === 'darwin') {
+// Linux
+if (isLinux) {
+  app.commandLine.appendSwitch('use-gl', 'angle')
+
+  // ARM: GLES for WebGL2; x86: prefer Vulkan
+  let angleBackend = (process.env.ELECTRON_ANGLE_BACKEND || (isArm ? 'gles' : 'vulkan')).toLowerCase()
+  if (isX86) angleBackend = 'gles'
+  app.commandLine.appendSwitch('use-angle', angleBackend)
+
+  // General GPU toggles
+  app.commandLine.appendSwitch('ignore-gpu-blocklist')
+  app.commandLine.appendSwitch('enable-gpu-rasterization')
+
+  // GL decode path
+  addFeatures('enable-features', [
+    'AcceleratedVideoEncoder',
+    'AcceleratedVideoDecodeLinuxGL',
+    'AcceleratedVideoDecodeLinuxZeroCopyGL',
+  ])
+
+  // HW video decode:
+  if (isX86) {
+    // Enable VA-API on x86
+    addFeatures('enable-features', ['VaapiVideoDecoder'])
+    if (angleBackend === 'vulkan') addFeatures('enable-features', ['Vulkan'])
+  } else {
+    // Disable VA-API on ARM (Pi has no VA-API backend)
+    addFeatures('disable-features', ['VaapiVideoDecoder'])
+  }
+}
+
+// macOS (enable WebGPU)
+if (isMac) {
   app.commandLine.appendSwitch('enable-unsafe-webgpu')
   app.commandLine.appendSwitch('enable-dawn-features', 'allow_unsafe_apis')
 }
+
+// diagnostics
+; (() => {
+  const g = (k: string) => app.commandLine.getSwitchValue(k) || '(default)'
+  console.log('[gpu] platform=%s arch=%s use-gl=%s use-angle=%s',
+    process.platform, process.arch, g('use-gl'), g('use-angle'))
+  console.log('[gpu] enable-features=%s', g('enable-features'))
+  console.log('[gpu] disable-features=%s', g('disable-features'))
+})()
 
 app.on('gpu-info-update', () => {
   console.log('GPU Info:', app.getGPUFeatureStatus())
@@ -88,7 +120,7 @@ let usbService: USBService
 let isQuitting = false
 
 const carplayService = new CarplayService()
-;(global as any).carplayService = carplayService
+  ; (global as any).carplayService = carplayService
 
 app.on('before-quit', async (e) => {
   if (isQuitting) return
