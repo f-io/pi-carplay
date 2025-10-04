@@ -8,31 +8,50 @@ import { ExtraConfig, KeyBindings } from './Globals'
 import { USBService } from './usb/USBService'
 import { CarplayService } from './carplay/CarplayService'
 
-// Important: On Linux, enabling VA-API flags breaks WebCodecs’ hardware fallback path.
-// Requesting ‘prefer-hardware’ without a valid VA-API backend will immediately close the decoder.
-// Therefore on Linux we default to ‘prefer-software’ and only switch to hardware after confirming support.
-// On macOS, the WebCodecs hardware accelerator is available, so this Linux-specific fallback logic is not needed.
+function setFeatureFlags(flags: string[]) {
+  app.commandLine.appendSwitch('enable-features', flags.join(','))
+}
 
-// Feature-Flags
-if (process.platform === 'linux') {
-  app.commandLine.appendSwitch(
-    'enable-features',
-    [
-      'AcceleratedVideoEncoder',
-      'AcceleratedVideoDecodeLinuxGL',
-      'AcceleratedVideoDecodeLinuxZeroCopyGL'
-    ].join(',')
-  )
-
-  // EGL/ANGLE for OpenGL
+function linuxPresetAngleVulkan() {
   app.commandLine.appendSwitch('use-gl', 'angle')
-  app.commandLine.appendSwitch('use-angle', 'gles')
+  app.commandLine.appendSwitch('use-angle', 'vulkan')
+  setFeatureFlags([
+    'Vulkan',
+    'VulkanFromANGLE',
+    'DefaultANGLEVulkan',
+    'AcceleratedVideoDecodeLinuxZeroCopyGL',
+    'AcceleratedVideoEncoder',
+    'VaapiIgnoreDriverChecks',
+    'UseMultiPlaneFormatForHardwareVideo'
+  ])
+  app.commandLine.appendSwitch('ozone-platform-hint', 'auto') // 'x11'
+}
 
-  // Disable blocklist & workarounds
+function linuxPresetEglGl() {
+  app.commandLine.appendSwitch('use-gl', 'egl')
+  setFeatureFlags([
+    'AcceleratedVideoDecodeLinuxGL',
+    'AcceleratedVideoDecodeLinuxZeroCopyGL',
+    'AcceleratedVideoEncoder',
+    'UseMultiPlaneFormatForHardwareVideo'
+  ])
+}
+
+function commonGpuToggles() {
   app.commandLine.appendSwitch('ignore-gpu-blocklist')
-
-  // GPU rasterization
   app.commandLine.appendSwitch('enable-gpu-rasterization')
+  app.commandLine.appendSwitch('disable-features', 'UseChromeOSDirectVideoDecoder')
+}
+
+// Default
+if (process.platform === 'linux' && process.arch === 'x64') {
+  commonGpuToggles()
+  linuxPresetAngleVulkan()
+
+  // ENV-Switch HW_DEBUG=egl
+  if (process.env.HW_DEBUG === 'egl') {
+    linuxPresetEglGl()
+  }
 }
 
 if (process.platform === 'darwin') {
