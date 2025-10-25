@@ -16,29 +16,18 @@ ipcRenderer.on('usb-event', (event, ...args) => {
 })
 
 type ChunkHandler = (payload: any) => void
-
 let videoChunkQueue: any[] = []
 let videoChunkHandler: ChunkHandler | null = null
-
 let audioChunkQueue: any[] = []
 let audioChunkHandler: ChunkHandler | null = null
 
 ipcRenderer.on('carplay-video-chunk', (_event, payload) => {
-  if (videoChunkHandler) {
-    videoChunkHandler(payload)
-  } else {
-    videoChunkQueue.push(payload)
-    console.log('[PRELOAD] Video chunk queued (no handler set)')
-  }
+  if (videoChunkHandler) videoChunkHandler(payload)
+  else videoChunkQueue.push(payload)
 })
-
 ipcRenderer.on('carplay-audio-chunk', (_event, payload) => {
-  if (audioChunkHandler) {
-    audioChunkHandler(payload)
-  } else {
-    audioChunkQueue.push(payload)
-    console.log('[PRELOAD] Audio chunk queued (no handler set)')
-  }
+  if (audioChunkHandler) audioChunkHandler(payload)
+  else audioChunkQueue.push(payload)
 })
 
 const api = {
@@ -62,13 +51,13 @@ const api = {
     },
     unlistenForEvents: (callback: ApiCallback<any>) => {
       usbEventHandlers = usbEventHandlers.filter((cb) => cb !== callback)
-    }
+    },
   },
 
   settings: {
     get: () => ipcRenderer.invoke('getSettings'),
     save: (settings: ExtraConfig) => ipcRenderer.invoke('save-settings', settings),
-    onUpdate: (callback: ApiCallback<ExtraConfig>) => ipcRenderer.on('settings', callback)
+    onUpdate: (callback: ApiCallback<ExtraConfig>) => ipcRenderer.on('settings', callback),
   },
 
   ipc: {
@@ -77,8 +66,7 @@ const api = {
     sendFrame: () => ipcRenderer.invoke('carplay-sendframe'),
     sendTouch: (x: number, y: number, action: number) =>
       ipcRenderer.send('carplay-touch', { x, y, action }),
-    sendMultiTouch: (points: MultiTouchPoint[]) =>
-      ipcRenderer.send('carplay-multi-touch', points),
+    sendMultiTouch: (points: MultiTouchPoint[]) => ipcRenderer.send('carplay-multi-touch', points),
     sendKeyCommand: (key: string) => ipcRenderer.send('carplay-key-command', key),
     onEvent: (callback: ApiCallback<any>) => ipcRenderer.on('carplay-event', callback),
 
@@ -91,14 +79,36 @@ const api = {
       audioChunkHandler = handler
       audioChunkQueue.forEach((chunk) => handler(chunk))
       audioChunkQueue = []
-    }
-  }
+    },
+  },
 }
 
 contextBridge.exposeInMainWorld('carplay', api)
 
+const appApi = {
+  getVersion: () => ipcRenderer.invoke('app:getVersion'),
+  getLatestRelease: () => ipcRenderer.invoke('app:getLatestRelease'),
+  performUpdate: (imageUrl?: string) => ipcRenderer.invoke('app:performUpdate', imageUrl),
+
+  onUpdateEvent: (cb: (payload: any) => void) => {
+    const ch = 'update:event'
+    const handler = (_e: IpcRendererEvent, payload: any) => cb(payload)
+    ipcRenderer.on(ch, handler)
+    return () => ipcRenderer.removeListener(ch, handler)
+  },
+  onUpdateProgress: (cb: (payload: any) => void) => {
+    const ch = 'update:progress'
+    const handler = (_e: IpcRendererEvent, payload: any) => cb(payload)
+    ipcRenderer.on(ch, handler)
+    return () => ipcRenderer.removeListener(ch, handler)
+  },
+}
+
+contextBridge.exposeInMainWorld('app', appApi)
+
 declare global {
   interface Window {
     carplay: typeof api
+    app: typeof appApi
   }
 }
