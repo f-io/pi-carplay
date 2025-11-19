@@ -6,8 +6,9 @@ export const AudioVolume = ({ data, onChange }: AudioVolumeProps) => {
     <NumberSpinner
       id="audio-volume"
       size="small"
-      value={data.audioVolume}
-      onValueChange={(v) => onChange('audioVolume', v)}
+      isSlider
+      value={Math.round(data.audioVolume * 100)}
+      onValueChange={(v) => onChange('audioVolume', v / 100)}
     />
   )
 }

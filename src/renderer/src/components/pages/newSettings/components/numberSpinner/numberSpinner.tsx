@@ -14,10 +14,12 @@ export default function NumberSpinner({
   label,
   error,
   size = 'medium',
+  isSlider = false,
   ...other
 }: BaseNumberField.Root.Props & {
   label?: React.ReactNode
   size?: 'small' | 'medium'
+  isSlider?: boolean
   error?: boolean
 }) {
   let id = React.useId()
@@ -93,32 +95,71 @@ export default function NumberSpinner({
           <RemoveIcon fontSize={size} />
         </BaseNumberField.Decrement>
 
-        <BaseNumberField.Input
-          id={id}
-          render={(props, state) => (
-            <OutlinedInput
-              inputRef={props.ref}
-              value={state.inputValue}
-              onBlur={props.onBlur}
-              onChange={props.onChange}
-              onKeyUp={props.onKeyUp}
-              onKeyDown={props.onKeyDown}
-              onFocus={props.onFocus}
-              slotProps={{
-                input: {
-                  ...props,
-                  size:
-                    Math.max((other.min?.toString() || '').length, state.inputValue.length || 1) +
-                    1,
-                  sx: {
-                    textAlign: 'center'
+        <div style={{ position: 'relative', width: '100%' }}>
+          <BaseNumberField.Input
+            id={id}
+            render={(props, state) => (
+              <OutlinedInput
+                inputRef={props.ref}
+                value={state.inputValue}
+                onBlur={props.onBlur}
+                onChange={props.onChange}
+                onKeyUp={props.onKeyUp}
+                onKeyDown={props.onKeyDown}
+                onFocus={props.onFocus}
+                inputProps={{
+                  readOnly: isSlider
+                }}
+                slotProps={{
+                  input: {
+                    ...props,
+                    size:
+                      Math.max((other.min?.toString() || '').length, state.inputValue.length || 1) +
+                      1,
+                    sx: {
+                      textAlign: 'center',
+                      bgcolor: 'black', // TODO get color from theme
+                      caretColor: isSlider ? 'transparent' : 'auto'
+                    }
                   }
-                }
+                }}
+                sx={{
+                  pr: 0,
+                  borderRadius: 0,
+                  flex: 1,
+                  width: '100%',
+                  // ...(isSlider && {
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#444444', // TODO get color from theme
+                    borderWidth: '1px'
+                  },
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#444444', // TODO get color from theme
+                    borderWidth: '1px'
+                  },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#807f7f', // TODO get color from theme
+                    borderWidth: '1px'
+                  }
+                  // })
+                }}
+              />
+            )}
+          />
+          {isSlider && (
+            <div
+              style={{
+                position: 'absolute',
+                height: 'calc(100% - 2px)',
+                top: '1px',
+                left: '1px',
+                width: `calc(${other.value}% - 2px)`,
+                maxWidth: '100%',
+                background: 'rgba(255, 0, 0, 0.5)' // TODO get color from theme
               }}
-              sx={{ pr: 0, borderRadius: 0, flex: 1 }}
             />
           )}
-        />
+        </div>
 
         <BaseNumberField.Increment
           render={

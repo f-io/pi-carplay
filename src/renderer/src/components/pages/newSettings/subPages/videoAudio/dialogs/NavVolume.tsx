@@ -6,8 +6,9 @@ export const NavVolume = ({ data, onChange }: NavVolumeProps) => {
     <NumberSpinner
       id="nav-volume"
       size="small"
-      value={data.navVolume}
-      onValueChange={(v) => onChange('navVolume', v)}
+      isSlider
+      value={Math.round(data.navVolume * 100)}
+      onValueChange={(v) => onChange('navVolume', v / 100)}
     />
   )
 }
