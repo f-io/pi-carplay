@@ -19,8 +19,8 @@ export enum RoutePath {
   Info = 'info'
 }
 
-export interface RouteProps {
-  path: string
+export interface RouteProp {
+  path?: string
   component?: unknown // TODO fix this
   icon?: ForwardRefExoticComponent<
     Omit<SVGProps<SVGSVGElement>, 'ref'> & {
@@ -29,4 +29,7 @@ export interface RouteProps {
     } & RefAttributes<SVGSVGElement>
   >
   title?: string
+  order?: number
 }
+
+export type RouteProps = RouteProp[]

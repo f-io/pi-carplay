@@ -2,12 +2,12 @@ import { Home, Media, Camera, Settings, Info } from '../components/pages'
 import { RoutePath, RouteProps } from './types'
 import { settingsRoutes } from './settings'
 
-export const routes: RouteProps[] = [
+export const routes: RouteProps = [
   {
     path: `/${RoutePath.Settings}`,
     component: Settings
   },
-  ...settingsRoutes,
+  ...settingsRoutes(),
   {
     path: `/${RoutePath.Info}`,
     component: Info

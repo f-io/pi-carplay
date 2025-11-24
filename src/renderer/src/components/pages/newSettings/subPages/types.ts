@@ -5,7 +5,7 @@ import {
   MediaDelayProps,
   AudioVolumeProps,
   NavVolumeProps
-} from './videoAudio/types'
+} from './video/types'
 import { CarNameProps, OemNameProps } from './general'
 import { DpiProps, FormatProps } from './other/types'
 

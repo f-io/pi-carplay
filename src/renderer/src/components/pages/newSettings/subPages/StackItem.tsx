@@ -26,7 +26,7 @@ const Item = styled(Paper)(({ theme }) => ({
       color: themeColors.highlightDark
     },
     svg: {
-      right: '3px',
+      // right: '3px',
       color: themeColors.highlightDark
     }
   },
@@ -36,7 +36,7 @@ const Item = styled(Paper)(({ theme }) => ({
       color: themeColors.highlightDark
     },
     svg: {
-      right: '3px',
+      // right: '3px',
       color: themeColors.highlightDark
     }
   },
@@ -46,7 +46,7 @@ const Item = styled(Paper)(({ theme }) => ({
       color: themeColors.highlightDark
     },
     svg: {
-      right: '3px',
+      // right: '3px',
       color: themeColors.highlightDark
     }
   },
@@ -79,7 +79,7 @@ const Item = styled(Paper)(({ theme }) => ({
       color: themeColors.highlightDark,
 
       '+ svg': {
-        right: '3px',
+        // right: '3px',
         color: themeColors.highlightDark
       }
     },
@@ -87,7 +87,7 @@ const Item = styled(Paper)(({ theme }) => ({
       color: themeColors.highlightDark,
 
       '+ svg': {
-        right: '3px',
+        // right: '3px',
         color: themeColors.highlightDark
       }
     },
@@ -95,7 +95,7 @@ const Item = styled(Paper)(({ theme }) => ({
       color: themeColors.highlightDark,
 
       '+ svg': {
-        right: '3px',
+        // right: '3px',
         color: themeColors.highlightDark
       }
     }

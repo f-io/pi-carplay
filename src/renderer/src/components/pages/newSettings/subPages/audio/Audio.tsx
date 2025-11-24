@@ -6,19 +6,16 @@ import { StackItem } from '../StackItem'
 import { useCarplayStore } from '@store/store'
 import { dialogsConfig } from '../../components/dialog/config'
 import { useSettingsDialogs } from '../../hooks'
-import { VideoSettingKey } from './types'
-import { videoSettingsUIConfig } from './config'
+import { AudioSettingKey } from './types'
+import { audioSettingsUIConfig } from './config'
 import { useSmartSettings } from '../../hooks/useSmartSettings'
 import { get } from 'lodash'
 import { EMPTY_STRING } from '@renderer/constants'
 
-export const VideoAudio = () => {
+export const Audio = () => {
   const settings = useCarplayStore((s) => s.settings)
 
-  const initialState: Record<VideoSettingKey, number> = {
-    width: settings?.width ?? 0,
-    height: settings?.height ?? 0,
-    fps: settings?.fps ?? 0,
+  const initialState: Record<AudioSettingKey, number> = {
     mediaDelay: settings?.mediaDelay ?? 0,
     audioVolume: settings?.audioVolume ?? 0,
     navVolume: settings?.navVolume ?? 0,
@@ -40,10 +37,10 @@ export const VideoAudio = () => {
     onReset: resetState
   })
 
-  const stackItems = (Object.keys(videoSettingsUIConfig) as VideoSettingKey[])
-    .filter((key) => key !== 'height' && key !== 'mediaSound')
+  const stackItems = (Object.keys(audioSettingsUIConfig) as AudioSettingKey[])
+    .filter((key) => key !== 'mediaSound')
     .map((key) => {
-      const cfg = videoSettingsUIConfig[key]
+      const cfg = audioSettingsUIConfig[key]
       return (
         <StackItem key={key} onClick={() => cfg.dialog && onToggleDialog(cfg.dialog!, true)}>
           <Typography>{cfg.label}</Typography>
@@ -62,7 +59,7 @@ export const VideoAudio = () => {
     <SettingsLayout onSave={save}>
       {stackItems}
       <StackItem>
-        <Typography>{videoSettingsUIConfig['mediaSound'].label}</Typography>
+        <Typography>{audioSettingsUIConfig['mediaSound'].label}</Typography>
 
         <Select
           labelId="select-camera"

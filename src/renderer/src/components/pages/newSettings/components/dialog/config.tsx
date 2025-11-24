@@ -1,14 +1,14 @@
-import { ScreenResolution } from '../../subPages/videoAudio/dialogs/ScreenResolution'
-import { Fps } from '../../subPages/videoAudio/dialogs/Fps'
-import { MediaDelay } from '../../subPages/videoAudio/dialogs/MediaDelay'
-import { AudioVolume } from '../../subPages/videoAudio/dialogs/AudioVolume'
-import { NavVolume } from '../../subPages/videoAudio/dialogs/NavVolume'
+import { ScreenResolution } from '../../subPages/video/dialogs/ScreenResolution'
+import { Fps } from '../../subPages/video/dialogs/Fps'
 import { CarName } from '../../subPages/general/dialogs/CarName'
 import { OemName } from '../../subPages/general/dialogs/OemName'
 import { Dpi } from '../../subPages/other/dialogs/Dpi'
 import { Format } from '../../subPages/other/dialogs/Format'
 import { DialogsConfigProps, SETTINGS_DIALOGS } from '../../subPages/types'
-import { ScreenResolutionProps } from '../../subPages/videoAudio/types'
+import { ScreenResolutionProps } from '../../subPages/video/types'
+import { MediaDelay } from '../../subPages/audio/dialogs/MediaDelay'
+import { AudioVolume } from '../../subPages/audio/dialogs/AudioVolume'
+import { NavVolume } from '../../subPages/audio/dialogs/NavVolume'
 
 export const dialogsConfig: DialogsConfigProps = {
   [SETTINGS_DIALOGS.SCREEN_RESOLUTION]: {

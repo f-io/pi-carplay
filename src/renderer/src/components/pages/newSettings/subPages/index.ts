@@ -1,5 +1,6 @@
 export * from './general'
-export * from './videoAudio/VideoAudio'
+export * from './audio/Audio'
+export * from './video/Video'
 export * from './keybindings/KeyBindings'
 export * from './other/subPages/Advanced'
 export * from './sources/Sources'

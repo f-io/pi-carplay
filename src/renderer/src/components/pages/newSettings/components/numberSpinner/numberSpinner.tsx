@@ -15,11 +15,13 @@ export default function NumberSpinner({
   error,
   size = 'medium',
   isSlider = false,
+  rootStyles = {},
   ...other
 }: BaseNumberField.Root.Props & {
   label?: React.ReactNode
   size?: 'small' | 'medium'
   isSlider?: boolean
+  rootStyles?: React.CSSProperties
   error?: boolean
 }) {
   let id = React.useId()
@@ -46,7 +48,8 @@ export default function NumberSpinner({
                 color: 'text.primary'
               }
             },
-            width: '100%'
+            width: '100%',
+            ...rootStyles
           }}
         >
           {props.children}
@@ -118,7 +121,6 @@ export default function NumberSpinner({
                       1,
                     sx: {
                       textAlign: 'center',
-                      bgcolor: 'black', // TODO get color from theme
                       caretColor: isSlider ? 'transparent' : 'auto'
                     }
                   }
@@ -128,7 +130,6 @@ export default function NumberSpinner({
                   borderRadius: 0,
                   flex: 1,
                   width: '100%',
-                  // ...(isSlider && {
                   '& .MuiOutlinedInput-notchedOutline': {
                     borderColor: '#444444', // TODO get color from theme
                     borderWidth: '1px'
@@ -141,7 +142,6 @@ export default function NumberSpinner({
                     borderColor: '#807f7f', // TODO get color from theme
                     borderWidth: '1px'
                   }
-                  // })
                 }}
               />
             )}
