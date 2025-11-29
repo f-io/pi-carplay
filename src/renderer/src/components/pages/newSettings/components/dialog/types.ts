@@ -1,4 +1,4 @@
-import { SETTINGS_DIALOGS } from '../../subPages/types'
+import { SETTINGS_DIALOGS } from '../../pages/types'
 
 export interface DialogProps {
   children: React.ReactNode

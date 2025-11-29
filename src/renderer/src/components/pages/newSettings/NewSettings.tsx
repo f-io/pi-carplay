@@ -1,14 +1,16 @@
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import { NavLink } from 'react-router-dom'
-import { settingsNestedRoutes } from '@renderer/routes/settings/nested'
-import { dropRight, map } from 'lodash'
-import { StackItem } from './subPages/StackItem'
+import { map } from 'lodash'
+import { StackItem } from './components/stackItem/StackItem'
 import { useTheme } from '@mui/material'
 import { RouteProps } from '../../../routes'
+import { settingsSubRoutes } from '../../../routes/settings/settings'
 
 export const NewSettings = () => {
   const theme = useTheme()
+
+  const filteredByLevel = settingsSubRoutes.filter(({ level }) => level === 1)
 
   return (
     <Box
@@ -23,7 +25,7 @@ export const NewSettings = () => {
       height="calc(100vh - 64px)"
     >
       <Stack spacing={0} sx={{ overflow: 'auto', height: '100%' }}>
-        {map([...dropRight(settingsNestedRoutes, 2)], (item: RouteProps, index: number) => {
+        {map(filteredByLevel, (item: RouteProps, index: number) => {
           return (
             <StackItem key={index} withForwardIcon>
               <NavLink to={item.path} key={index}>

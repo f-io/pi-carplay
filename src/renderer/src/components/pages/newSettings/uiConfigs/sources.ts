@@ -1,5 +1,5 @@
-import { SETTINGS_DIALOGS } from '../types'
-import { SourcesSettingKey } from './types'
+import { SETTINGS_DIALOGS } from '../pages/types'
+import { SourcesSettingKey } from '../pages/sources/types'
 
 export const sourcesSettingsUIConfig: Record<
   SourcesSettingKey,

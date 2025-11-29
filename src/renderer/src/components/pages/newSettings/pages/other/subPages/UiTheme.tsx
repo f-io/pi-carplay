@@ -1,10 +1,10 @@
 import { SettingsLayout } from '@renderer/components/layouts/SettingsLayout'
 import { useCarplayStore } from '@renderer/store/store'
 import { Button, Typography, useTheme, TextField, InputAdornment } from '@mui/material'
-import { StackItem } from '../../StackItem'
+import { StackItem } from '../../../components/stackItem/StackItem'
 import { THEME } from '@renderer/constants'
 import { useSmartSettings } from '../../../hooks/useSmartSettings'
-import { uiThemeSettingsUIConfig } from '../config'
+import { uiThemeSettingsUIConfig } from '../../../uiConfigs/advanced'
 import { UiThemeSettingKey } from '../types'
 
 export const UiTheme = () => {

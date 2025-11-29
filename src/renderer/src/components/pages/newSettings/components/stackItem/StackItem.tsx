@@ -2,13 +2,14 @@ import { styled } from '@mui/material/styles'
 import Paper from '@mui/material/Paper'
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined'
 import { themeColors } from '@renderer/themeColors'
-import { StackItemProps } from './types'
+import { StackItemProps } from '../../pages/types'
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
+  gap: '3rem',
   flexDirection: 'row',
   paddingRight: theme.spacing(2),
   borderBottom: `2px solid ${theme.palette.divider}`,
@@ -102,10 +103,11 @@ const Item = styled(Paper)(({ theme }) => ({
   }
 }))
 
-export const StackItem = ({ children, withForwardIcon, onClick }: StackItemProps) => {
+export const StackItem = ({ children, value, withForwardIcon, onClick }: StackItemProps) => {
   return (
     <Item onClick={onClick}>
       {children}
+      {value && <span>{value}</span>}
       {withForwardIcon && <ArrowForwardIosOutlinedIcon sx={{ color: 'inherit' }} />}
     </Item>
   )

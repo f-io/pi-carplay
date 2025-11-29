@@ -15,8 +15,6 @@ export enum SETTINGS_DIALOGS {
   MEDIA_DELAY = 'MEDIA_DELAY',
   AUDIO_VOLUME = 'AUDIO_VOLUME',
   NAV_VOLUME = 'NAV_VOLUME',
-  CAR_NAME = 'CAR_NAME',
-  OEM_NAME = 'OEM_NAME',
   DPI = 'DPI',
   FORMAT = 'FORMAT'
 }
@@ -24,6 +22,7 @@ export enum SETTINGS_DIALOGS {
 export interface StackItemProps {
   children?: ReactNode
   withForwardIcon?: boolean
+  value?: string
   onClick?: () => void
 }
 
@@ -33,8 +32,6 @@ export type DialogPropsMap = {
   [SETTINGS_DIALOGS.MEDIA_DELAY]: MediaDelayProps
   [SETTINGS_DIALOGS.AUDIO_VOLUME]: AudioVolumeProps
   [SETTINGS_DIALOGS.NAV_VOLUME]: NavVolumeProps
-  [SETTINGS_DIALOGS.CAR_NAME]: CarNameProps
-  [SETTINGS_DIALOGS.OEM_NAME]: OemNameProps
   [SETTINGS_DIALOGS.DPI]: DpiProps
   [SETTINGS_DIALOGS.FORMAT]: FormatProps
 }

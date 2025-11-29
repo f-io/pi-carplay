@@ -29,4 +29,5 @@ export interface RouteProps {
     } & RefAttributes<SVGSVGElement>
   >
   title?: string
+  level: number
 }

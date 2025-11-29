@@ -1,5 +1,5 @@
-import { AdvancedSettingKey, UiThemeSettingKey } from './types'
-import { SETTINGS_DIALOGS } from '../types'
+import { AdvancedSettingKey, UiThemeSettingKey } from '../pages/other/types'
+import { SETTINGS_DIALOGS } from '../pages/types'
 
 export const advancedSettingsUIConfig: Record<
   AdvancedSettingKey,

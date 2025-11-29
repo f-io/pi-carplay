@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { DialogsConfigProps, SETTINGS_DIALOGS } from '../subPages/types'
+import { DialogsConfigProps, SETTINGS_DIALOGS } from '../pages/types'
 import { SettingsDialog } from '../components/dialog'
 
 interface UseSettingsDialogsProps<TData extends Record<string, any>> {

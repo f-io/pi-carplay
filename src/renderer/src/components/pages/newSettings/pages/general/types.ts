@@ -1,10 +1,11 @@
 import { ExtraConfig } from '@main/Globals'
 import { DefaultDialogProps } from '../../components/dialog/types'
 
-export type GeneralSettingKey = keyof Pick<
-  ExtraConfig,
-  'autoPlay' | 'audioTransferMode' | 'nightMode' | 'kiosk' | 'carName' | 'oemName'
->
+// export type GeneralSettingKey = keyof Pick<
+//   ExtraConfig,
+//   'autoPlay' | 'audioTransferMode' | 'nightMode' | 'kiosk' | 'carName' | 'oemName'
+// >
+export type GeneralSettingKey = keyof Pick<ExtraConfig, 'kiosk'>
 
 export type CarNameProps = DefaultDialogProps<'carName', { carName: string }>
 

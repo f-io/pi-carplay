@@ -1,7 +1,7 @@
 import { Box, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material'
 import { map } from 'lodash'
 import { DialogProps } from './types'
-import { SETTINGS_DIALOGS } from '../../subPages/types'
+import { SETTINGS_DIALOGS } from '../../pages/types'
 
 export const SettingsDialog = ({
   children,
