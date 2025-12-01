@@ -8,8 +8,8 @@ export const connectionAndNetworkSettingsUIConfig: Record<
     path?: string
   }
 > = {
-  carName: { label: 'Carname', type: 'route', path: settingsPaths.carname },
-  autoConn: { label: 'Autoconnect', type: 'toggle', path: settingsPaths.autoconnect },
+  carName: { label: 'Car name', type: 'route', path: settingsPaths.carname },
+  autoConn: { label: 'Auto connect', type: 'toggle', path: settingsPaths.autoconnect },
   wifiType: { label: 'WiFi type', type: 'route', path: settingsPaths.wifitype },
   wifiChannel: { label: 'WiFi channel', type: 'route', path: settingsPaths.wifiChannel }
 }

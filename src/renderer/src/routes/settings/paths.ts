@@ -16,6 +16,8 @@ export const settingsPaths = {
 
   // Sources
   deviceAndSources: `/${RoutePath.NewSettings}/deviceAndSources`,
+  micType: `/${RoutePath.NewSettings}/micType`,
+  camera: `/${RoutePath.NewSettings}/camera`,
 
   // Single
   audioDelay: `/${RoutePath.NewSettings}/audioDelay`,
