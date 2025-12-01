@@ -24,6 +24,12 @@ export const settingsPaths = {
 
   // Dongle params
   dongleParams: `/${RoutePath.NewSettings}/dongleParams`,
+  iBoxVersion: `/${RoutePath.NewSettings}/iBoxVersion`,
+  phoneWorkMode: `/${RoutePath.NewSettings}/phoneWorkMode`,
+  packetMax: `/${RoutePath.NewSettings}/packetMax`,
+  androidAuto: `/${RoutePath.NewSettings}/androidAuto`,
+  dpi: `/${RoutePath.NewSettings}/dpi`,
+  format: `/${RoutePath.NewSettings}/format`,
 
   keybindings: `/${RoutePath.NewSettings}/keybindings`,
 

@@ -28,6 +28,7 @@ export const WifiType: React.FC = () => {
         {['2.4ghz', '5ghz'].map((variant, index) => {
           return (
             <ToggleButton
+              key={index}
               size="small"
               value={variant}
               sx={{

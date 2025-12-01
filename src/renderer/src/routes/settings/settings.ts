@@ -1,4 +1,4 @@
-import { General } from '../../components/pages/newSettings/pages'
+import { About, General, KeyBindings } from '../../components/pages/newSettings/pages'
 import { RouteProps } from '../types'
 import { settingsPaths } from './paths'
 import { ConnectionAndNetwork } from '../../components/pages/newSettings/pages/connectionAndNetwork'
@@ -9,6 +9,13 @@ import { DeviceAndSources } from '../../components/pages/newSettings/pages/devic
 import { Camera } from '../../components/pages/newSettings/pages/camera'
 import { MicType } from '../../components/pages/newSettings/pages/micType'
 import { AudioDelay } from '../../components/pages/newSettings/pages/audioDelay'
+import { DongleParams } from '../../components/pages/newSettings/pages/dongleParams'
+import { IBoxVersion } from '../../components/pages/newSettings/pages/iBoxVersion'
+import { PhoneWorkMode } from '../../components/pages/newSettings/pages/phoneWorkMode'
+import { PacketMax } from '../../components/pages/newSettings/pages/packetMax'
+import { AndroidAuto } from '../../components/pages/newSettings/pages/androidAuto'
+import { Dpi } from '../../components/pages/newSettings/pages/dpi'
+import { Format } from '../../components/pages/newSettings/pages/format'
 
 export const settingsSubRoutes: RouteProps[] = [
   {
@@ -30,6 +37,25 @@ export const settingsSubRoutes: RouteProps[] = [
     title: 'Device and Sources',
     level: 2
   },
+  {
+    path: settingsPaths.dongleParams,
+    component: DongleParams,
+    title: 'Advanced Dongle params',
+    level: 2
+  },
+  {
+    path: settingsPaths.keybindings,
+    component: KeyBindings,
+    title: 'Keybindings',
+    level: 2
+  },
+  {
+    path: settingsPaths.about,
+    component: About,
+    title: 'About',
+    level: 2
+  },
+
   // Other second level
   {
     path: settingsPaths.carname,
@@ -65,6 +91,42 @@ export const settingsSubRoutes: RouteProps[] = [
     path: settingsPaths.audioDelay,
     component: AudioDelay,
     title: 'AudioDelay',
+    level: 3
+  },
+  {
+    path: settingsPaths.iBoxVersion,
+    component: IBoxVersion,
+    title: 'IBoxVersion',
+    level: 3
+  },
+  {
+    path: settingsPaths.phoneWorkMode,
+    component: PhoneWorkMode,
+    title: 'PhoneWorkMode',
+    level: 3
+  },
+  {
+    path: settingsPaths.packetMax,
+    component: PacketMax,
+    title: 'PacketMax',
+    level: 3
+  },
+  {
+    path: settingsPaths.androidAuto,
+    component: AndroidAuto,
+    title: 'AndroidAuto',
+    level: 3
+  },
+  {
+    path: settingsPaths.dpi,
+    component: Dpi,
+    title: 'DPI',
+    level: 3
+  },
+  {
+    path: settingsPaths.format,
+    component: Format,
+    title: 'Format',
     level: 3
   }
   // // Other third level
