@@ -14,6 +14,7 @@ const Item = styled(Paper)(({ theme }) => ({
   paddingRight: theme.spacing(2),
   borderBottom: `2px solid ${theme.palette.divider}`,
   height: '58px',
+  position: 'relative',
 
   '& svg': {
     position: 'relative',
