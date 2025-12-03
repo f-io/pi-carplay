@@ -33,5 +33,8 @@ export const settingsPaths = {
 
   keybindings: `/${RoutePath.NewSettings}/keybindings`,
 
-  about: `/${RoutePath.NewSettings}/about`
+  about: `/${RoutePath.NewSettings}/about`,
+
+  streamResolution: `/${RoutePath.NewSettings}/streamResolution`,
+  fps: `/${RoutePath.NewSettings}/fps`
 }

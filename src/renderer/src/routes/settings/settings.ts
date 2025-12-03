@@ -1,4 +1,4 @@
-import { About, General, KeyBindings } from '../../components/pages/newSettings/pages'
+import { About, General, KeyBindings, Video } from '../../components/pages/newSettings/pages'
 import { RouteProps } from '../types'
 import { settingsPaths } from './paths'
 import { ConnectionAndNetwork } from '../../components/pages/newSettings/pages/connectionAndNetwork'
@@ -16,12 +16,20 @@ import { PacketMax } from '../../components/pages/newSettings/pages/packetMax'
 import { AndroidAuto } from '../../components/pages/newSettings/pages/androidAuto'
 import { Dpi } from '../../components/pages/newSettings/pages/dpi'
 import { Format } from '../../components/pages/newSettings/pages/format'
+import { ScreenResolution } from '../../components/pages/newSettings/pages/screenResolution'
+import { Fps } from '../../components/pages/newSettings/pages/fps'
 
 export const settingsSubRoutes: RouteProps[] = [
   {
     path: settingsPaths.general,
     component: General,
     title: 'General',
+    level: 1
+  },
+  {
+    path: settingsPaths.video,
+    component: Video,
+    title: 'Video',
     level: 1
   },
   // Other first level
@@ -53,6 +61,18 @@ export const settingsSubRoutes: RouteProps[] = [
     path: settingsPaths.about,
     component: About,
     title: 'About',
+    level: 2
+  },
+  {
+    path: settingsPaths.streamResolution,
+    component: ScreenResolution,
+    title: 'Stream Resolution',
+    level: 2
+  },
+  {
+    path: settingsPaths.fps,
+    component: Fps,
+    title: 'FPS',
     level: 2
   },
 
