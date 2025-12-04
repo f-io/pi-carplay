@@ -4,6 +4,11 @@
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/main.js",
   "author": "Lasse Heitgres",
+  "contributors": [
+    "Anton Ashyn",
+    "Lasse Heitgres",
+    "...etc"
+  ],
   "homepage": "https://f-io.dev",
   "scripts": {
     "prepare": "husky",
