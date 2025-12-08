@@ -19,6 +19,7 @@ import { Format } from '../../components/pages/newSettings/pages/format'
 import { ScreenResolution } from '../../components/pages/newSettings/pages/screenResolution'
 import { Fps } from '../../components/pages/newSettings/pages/fps'
 import { Audio } from '../../components/pages/newSettings/pages/audio'
+import { Music } from '../../components/pages/newSettings/pages/music'
 
 export const settingsSubRoutes: RouteProps[] = [
   {
@@ -80,6 +81,54 @@ export const settingsSubRoutes: RouteProps[] = [
     path: settingsPaths.fps,
     component: Fps,
     title: 'FPS',
+    level: 2
+  },
+  {
+    path: settingsPaths.music,
+    component: Music,
+    title: 'Music',
+    level: 2
+  },
+  {
+    path: settingsPaths.navi,
+    component: Fps,
+    title: 'Navigation',
+    level: 2
+  },
+  {
+    path: settingsPaths.siri,
+    component: Fps,
+    title: 'Siri',
+    level: 2
+  },
+  {
+    path: settingsPaths.phone,
+    component: Fps,
+    title: 'Phonecall',
+    level: 2
+  },
+  {
+    path: settingsPaths.audioBuffer,
+    component: Fps,
+    title: 'Audio Buffering',
+    level: 2
+  },
+  {
+    path: settingsPaths.freq,
+    component: Fps,
+    title: 'Sampling Frequency',
+    level: 2
+  },
+  {
+    path: settingsPaths.call,
+    component: Fps,
+    title: 'Call Quality',
+    level: 2
+  },
+  {
+    path: settingsPaths.audio2,
+    component: Fps,
+    title: 'Audio',
     level: 2
   },
 

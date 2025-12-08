@@ -35,7 +35,7 @@ export const Audio = () => {
 
   return (
     <SettingsLayout onSave={save}>
-      {(Object.keys(videoSettingsUIConfig) as AudioSettingKey[]).map((item, index) => {
+      {(Object.keys(audioSettingsUIConfig) as AudioSettingKey[]).map((item, index) => {
         const onClick = () => handleFieldChange(item, !settingsState[item])
 
         return (

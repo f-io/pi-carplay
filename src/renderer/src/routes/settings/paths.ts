@@ -35,6 +35,17 @@ export const settingsPaths = {
 
   about: `/${RoutePath.NewSettings}/about`,
 
+  // Video
   streamResolution: `/${RoutePath.NewSettings}/streamResolution`,
-  fps: `/${RoutePath.NewSettings}/fps`
+  fps: `/${RoutePath.NewSettings}/fps`,
+
+  // Audio
+  music: `/${RoutePath.NewSettings}/music`,
+  navi: `/${RoutePath.NewSettings}/navi`,
+  siri: `/${RoutePath.NewSettings}/siri`,
+  phone: `/${RoutePath.NewSettings}/phone`,
+  audioBuffer: `/${RoutePath.NewSettings}/audioBuffer`,
+  freq: `/${RoutePath.NewSettings}/freq`,
+  call: `/${RoutePath.NewSettings}/call`,
+  audio2: `/${RoutePath.NewSettings}/audio2`,
 }
