@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef, useCallback, useContext, ElementType } from 'react'
-import { useEffect, useState, useRef, useCallback, useContext, ElementType } from 'react'
 import { HashRouter as Router, Route, Routes, useLocation } from 'react-router-dom'
 import { Carplay, Camera } from './components/pages'
 import { Nav } from './components/navigation/Nav'
@@ -10,7 +9,6 @@ import { updateCameras } from './utils/cameraDetection'
 import { useActiveControl, useFocus, useKeyDown } from './hooks'
 import { ROUTES } from './constants'
 import { AppContext } from './context'
-import { routes } from './routes'
 import { routes } from './routes'
 
 const modalStyle = {
