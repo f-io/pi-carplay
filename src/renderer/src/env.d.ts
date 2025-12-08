@@ -88,6 +88,7 @@ declare global {
         getDeviceInfo(): Promise<UsbDeviceInfo>
         getLastEvent(): Promise<unknown>
         getSysdefaultPrettyName(): Promise<string>
+        uploadIcons(): Promise<void>
         listenForEvents(callback: (event: unknown, ...args: unknown[]) => void): void
         unlistenForEvents(callback: (event: unknown, ...args: unknown[]) => void): void
       }
@@ -106,9 +107,8 @@ declare global {
         sendMultiTouch(points: MultiTouchPoint[]): void
         sendKeyCommand(key: string): void
         onEvent(callback: (event: unknown, ...args: unknown[]) => void): void
-
+        setVisualizerEnabled(enabled: boolean): void
         readMedia(): Promise<MediaPayload>
-
         onVideoChunk(handler: (payload: unknown) => void): void
         onAudioChunk(handler: (payload: unknown) => void): void
       }

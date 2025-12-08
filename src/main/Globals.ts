@@ -3,17 +3,19 @@ import { DongleConfig } from '@carplay/messages'
 export type ExtraConfig = DongleConfig & {
   kiosk: boolean
   camera: string
-  microphone: string
   bindings: KeyBindings
   audioVolume: number
   navVolume: number
   siriVolume: number
   callVolume: number
-  visualAudioDelayMs?: number
+  visualAudioDelayMs: number
   primaryColorDark?: string
   primaryColorLight?: string
   highlightEditableFieldLight?: string
   highlightEditableFieldDark?: string
+  dongleIcon120?: string
+  dongleIcon180?: string
+  dongleIcon256?: string
 }
 
 export interface KeyBindings {

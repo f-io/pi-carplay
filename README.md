@@ -1,4 +1,8 @@
 <p align="center">
+  <img alt='pi-carplay' src='documentation/images/banner.png' width="1200" />
+</p>
+
+<p align="center">
   <!-- Release -->
   <img alt="Release" src="https://img.shields.io/github/v/release/f-io/pi-carplay?label=release"> &nbsp;&nbsp;&nbsp;
   <!-- MAIN -->
@@ -11,11 +15,13 @@
   <img alt="Build Dev" src="https://img.shields.io/github/actions/workflow/status/f-io/pi-carplay/build.yml?branch=dev&label=build%20dev&style=flat">
 </p>
 
-# <img src="assets/icons/linux/pi-carplay.png" alt="pi-carplay" width="25px" /> pi-carplay
+# pi-carplay
 
-pi-carplay brings Apple CarPlay and Android Auto to the Raspberry Pi, with support for Linux (ARM/x86) and macOS (ARM) as well. It is a standalone Electron app, optimized for embedded setups and ultra-low-resolution OEM displays.  
+pi-carplay enables **Apple CarPlay and Android Auto on Raspberry Pi**, standard Linux systems (ARM/x86), and **macOS (ARM)** using Carlinkit / AutoBox adapters.
 
-> **Requirements:** A Carlinkit **CPC200-CCPA** (wireless & wired) or **CPC200-CCPW** (wired only) adapter.
+It is a standalone cross-platform Electron head unit with hardware-accelerated video decoding, low-latency audio, multitouch + D-Pad navigation, and support for very small embedded/OEM displays.
+
+> **Supported adapters:** Carlinkit **CPC200-CCPA** (wireless/wired) and **CPC200-CCPW** (wired)
 
 ## Build Environment
 
@@ -24,22 +30,6 @@ pi-carplay brings Apple CarPlay and Android Auto to the Raspberry Pi, with suppo
 ![electron](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/f-io/pi-carplay/version/.github/badges/main-electron.json)
 ![chrome](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/f-io/pi-carplay/version/.github/badges/main-electron-date.json)
 ![release](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/f-io/pi-carplay/version/.github/badges/main-electron-chromium.json)
-
-## Images
-
-<p align="center">
-  <img src="documentation/images/carplay.png" alt="CarPlay" width="58%" />
-</p>
-<p align="center">
-  <img src="documentation/images/carplay_no_phone.png" alt="No Phone" width="48%" align="top" />
-  &emsp;
-  <img src="documentation/images/media.png" alt="Media" width="48%" align="top" />
-</p>
-<p align="center">
-  <img src="documentation/images/info.png" alt="Info" width="48%" align="top" />
-  &emsp;
-  <img src="documentation/images/settings.png" alt="Settings" width="48%" align="top" />
-</p>
 
 # Installation
 
@@ -59,16 +49,30 @@ The `setup-pi.sh` script performs the following tasks:
 4. creates an autostart entry, so the application will launch automatically on boot
 5. creates a desktop shortcut for easy access to the application
 
-*Not actively tested on other Linux distributions.*
+_Not actively tested on other Linux distributions._
 
 ---
 
 ## Linux (x86_64)
 
-This AppImage has been tested on Debian Trixie (13). No additional software is required — just download the `-x86_64.AppImage` and make it executable. Depending on your distro and how you run the app, you may need a udev rule to access the USB dongle. It presents as a composite (multi-class) USB device, and unlike single-class devices, its interfaces often require explicit permissions. The optional install script can create this rule for you.
+This AppImage has been tested on Debian Trixie (13). No additional software is required — just download the `-x86_64.AppImage` and make it executable. Depending on your distro and how you run the app, you may need a udev rule to access the USB dongle. It presents as a composite (multi-class) USB device, and unlike single-class devices, its interfaces often require explicit permissions.
 
-```udev
-SUBSYSTEM=="usb", ATTR{idVendor}=="1314", ATTR{idProduct}=="152*", MODE="0660", GROUP="plugdev"
+```bash
+sudo bash -c '
+  RULE_FILE="/etc/udev/rules.d/99-pi-carplay.rules"
+  USER_NAME="${SUDO_USER:-$USER}"
+
+  echo "Creating udev rule for Carlinkit dongle (owner: $USER_NAME)"
+  echo "SUBSYSTEM==\"usb\", ATTR{idVendor}==\"1314\", ATTR{idProduct}==\"152*\", " \
+       "MODE=\"0660\", OWNER=\"$USER_NAME\"" \
+    > "$RULE_FILE"
+
+  echo "Reloading udev rules…"
+  udevadm control --reload-rules
+  udevadm trigger
+
+  echo "Done."
+'
 ```
 
 ```bash
@@ -87,6 +91,7 @@ xattr -cr /Applications/pi-carplay.app
 ```
 
 For microphone support, please install Sound eXchange (SoX) via brew.
+
 ```bash
 brew install sox
 ```
@@ -119,12 +124,31 @@ git clone --branch main --single-branch https://github.com/f-io/pi-carplay.git \
 
 ## Android Auto
 
-> **Provisioning not supported.** This app does **not** perform the Android Auto first-time provisioning/pairing flow.  
+> **Provisioning not supported.** This app does **not** perform the Android Auto first-time provisioning/pairing flow.
 > Your phone must already be paired/enrolled **on the dongle**.
 
 **How to provision AA on the dongle:**
+
 1. Use the dongle with a regular head unit **or** the vendor’s mobile app to add your phone once.
 2. After the dongle knows your phone, connect the dongle to pi-carplay — it will attach without running provisioning again.
+
+---
+
+## Images
+
+<p align="center">
+  <img src="documentation/images/carplay.png" alt="CarPlay" width="58%" />
+</p>
+<p align="center">
+  <img src="documentation/images/carplay_no_phone.png" alt="No Phone" width="48%" align="top" />
+  &emsp;
+  <img src="documentation/images/media.png" alt="Media" width="48%" align="top" />
+</p>
+<p align="center">
+  <img src="documentation/images/info.png" alt="Info" width="48%" align="top" />
+  &emsp;
+  <img src="documentation/images/settings.png" alt="Settings" width="48%" align="top" />
+</p>
 
 ---
 

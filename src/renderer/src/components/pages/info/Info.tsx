@@ -84,9 +84,7 @@ export const Info = () => {
   const audioSampleRate = useCarplayStore((s) => s.audioSampleRate)
   const audioChannels = useCarplayStore((s) => s.audioChannels)
   const audioBitDepth = useCarplayStore((s) => s.audioBitDepth)
-
   const isStreaming = useStatusStore((s) => s.isStreaming)
-  const pcmData = useCarplayStore((s) => s.audioPcmData) ?? new Float32Array(0)
 
   const [installedVersion, setInstalledVersion] = useState<string>('—')
   const [latestVersion, setLatestVersion] = useState<string>('—')
@@ -262,6 +260,15 @@ export const Info = () => {
       useCarplayStore.getState().resetInfo()
     }
   }, [isDongleConnected])
+
+  useEffect(() => {
+    const enabled = isStreaming
+    window.carplay?.ipc?.setVisualizerEnabled?.(enabled)
+
+    return () => {
+      window.carplay?.ipc?.setVisualizerEnabled?.(false)
+    }
+  }, [isStreaming])
 
   useEffect(() => {
     const off1 = window.app?.onUpdateEvent?.((e: UpdateEvent) => {
@@ -500,7 +507,7 @@ export const Info = () => {
                 mt: 0.5
               }}
             >
-              <FFTSpectrum data={pcmData} />
+              <FFTSpectrum />
             </Box>
           </Box>
         </Box>

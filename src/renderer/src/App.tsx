@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef, useCallback, useContext, ElementType } from 'react'
+import { useEffect, useState, useRef, useCallback, useContext, ElementType } from 'react'
 import { HashRouter as Router, Route, Routes, useLocation } from 'react-router-dom'
 import { Carplay, Camera } from './components/pages'
 import { Nav } from './components/navigation/Nav'
@@ -9,6 +10,7 @@ import { updateCameras } from './utils/cameraDetection'
 import { useActiveControl, useFocus, useKeyDown } from './hooks'
 import { ROUTES } from './constants'
 import { AppContext } from './context'
+import { routes } from './routes'
 import { routes } from './routes'
 
 const modalStyle = {
@@ -137,6 +139,19 @@ function AppInner() {
 
       <div ref={mainRef} id="main-root">
         <Routes>
+          {routes.map((route, index) => {
+            const Component = route.component as unknown as ElementType
+            const path = route.path
+
+            if (Component) {
+              return <Route key={index} path={path} element={<Component settings={settings!} />} />
+            }
+
+            return null
+          })}
+
+          {/*TODO Clarify behaviour*/}
+          {/*<Route path="*" element={<Navigate to={`/${RoutePath.Home}`} replace />} />*/}
           {routes.map((route, index) => {
             const Component = route.component as unknown as ElementType
             const path = route.path

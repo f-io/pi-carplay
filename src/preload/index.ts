@@ -47,6 +47,7 @@ const api = {
     getDeviceInfo: (): Promise<unknown> => ipcRenderer.invoke('carplay:usbDevice'),
     getLastEvent: (): Promise<unknown> => ipcRenderer.invoke('usb-last-event'),
     getSysdefaultPrettyName: (): Promise<string> => ipcRenderer.invoke('get-sysdefault-mic-label'),
+    uploadIcons: () => ipcRenderer.invoke('carplay-upload-icons'),
     listenForEvents: (callback: ApiCallback): void => {
       usbEventHandlers.push(callback)
       usbEventQueue.forEach(([evt, ...args]) => callback(evt, ...args))
@@ -92,6 +93,9 @@ const api = {
     },
     setVolume: (stream: 'music' | 'nav' | 'siri' | 'call', volume: number): void => {
       ipcRenderer.send('carplay-set-volume', { stream, volume })
+    },
+    setVisualizerEnabled: (enabled: boolean): void => {
+      ipcRenderer.send('carplay-set-visualizer-enabled', !!enabled)
     }
   }
 }
@@ -128,6 +132,12 @@ const appApi = {
     ipcRenderer.on(ch, handler)
     return () => ipcRenderer.removeListener(ch, handler)
   },
+
+  resetDongleIcons: (): Promise<{
+    dongleIcon120?: string
+    dongleIcon180?: string
+    dongleIcon256?: string
+  }> => ipcRenderer.invoke('settings:reset-dongle-icons'),
 
   beginInstall: (): Promise<void> => ipcRenderer.invoke('app:beginInstall'),
   abortUpdate: (): Promise<void> => ipcRenderer.invoke('app:abortUpdate')

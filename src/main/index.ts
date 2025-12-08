@@ -10,6 +10,7 @@ import {
 } from 'fs'
 import { electronApp, is } from '@electron-toolkit/utils'
 import { DEFAULT_CONFIG } from '@carplay/node'
+import { ICON_120_B64, ICON_180_B64, ICON_256_B64 } from './carplay/assets/carIcons'
 import { Socket } from './Socket'
 import { ExtraConfig, KeyBindings } from './Globals'
 import { USBService } from './usb/USBService'
@@ -21,6 +22,7 @@ import https from 'node:https'
 function setFeatureFlags(flags: string[]) {
   app.commandLine.appendSwitch('enable-features', flags.join(','))
 }
+
 function linuxPresetAngleVulkan() {
   app.commandLine.appendSwitch('use-gl', 'angle')
   app.commandLine.appendSwitch('use-angle', 'vulkan')
@@ -28,6 +30,7 @@ function linuxPresetAngleVulkan() {
     'Vulkan',
     'VulkanFromANGLE',
     'DefaultANGLEVulkan',
+    'UnsafeWebGPU',
     'AcceleratedVideoDecodeLinuxZeroCopyGL',
     'AcceleratedVideoEncoder',
     'VaapiIgnoreDriverChecks',
@@ -35,30 +38,27 @@ function linuxPresetAngleVulkan() {
   ])
   app.commandLine.appendSwitch('ozone-platform-hint', 'auto')
 }
-function linuxPresetEglGl() {
-  app.commandLine.appendSwitch('use-gl', 'egl')
-  setFeatureFlags([
-    'AcceleratedVideoDecodeLinuxGL',
-    'AcceleratedVideoDecodeLinuxZeroCopyGL',
-    'AcceleratedVideoEncoder',
-    'UseMultiPlaneFormatForHardwareVideo'
-  ])
-}
+
 function commonGpuToggles() {
   app.commandLine.appendSwitch('ignore-gpu-blocklist')
   app.commandLine.appendSwitch('enable-gpu-rasterization')
   app.commandLine.appendSwitch('disable-features', 'UseChromeOSDirectVideoDecoder')
 }
 
+// Linux x64 -> ANGLE + Vulkan + WebGPU
 if (process.platform === 'linux' && process.arch === 'x64') {
   commonGpuToggles()
   linuxPresetAngleVulkan()
-  if (process.env.HW_DEBUG === 'egl') linuxPresetEglGl()
+  app.commandLine.appendSwitch('enable-unsafe-webgpu')
+  app.commandLine.appendSwitch('enable-dawn-features', 'allow_unsafe_apis')
 }
+
+// macOS: WebGPU
 if (process.platform === 'darwin') {
   app.commandLine.appendSwitch('enable-unsafe-webgpu')
   app.commandLine.appendSwitch('enable-dawn-features', 'allow_unsafe_apis')
 }
+
 app.on('gpu-info-update', () => {
   console.log('GPU Info:', app.getGPUFeatureStatus())
 })
@@ -197,15 +197,25 @@ function loadConfig(): ExtraConfig {
     ...DEFAULT_CONFIG,
     kiosk: true,
     camera: '',
-    microphone: '',
     nightMode: true,
     audioVolume: 1.0,
     navVolume: 1.0,
     siriVolume: 1.0,
     callVolume: 1.0,
+    visualAudioDelayMs: 120,
     bindings: { ...DEFAULT_BINDINGS },
     ...fileConfig
   } as ExtraConfig
+
+  if (!merged.dongleIcon120) {
+    merged.dongleIcon120 = ICON_120_B64
+  }
+  if (!merged.dongleIcon180) {
+    merged.dongleIcon180 = ICON_180_B64
+  }
+  if (!merged.dongleIcon256) {
+    merged.dongleIcon256 = ICON_256_B64
+  }
 
   merged.bindings = { ...DEFAULT_BINDINGS, ...(fileConfig.bindings || {}) }
 
@@ -274,7 +284,6 @@ function downloadWithProgress(
   let cancelled = false
   let _resolve: (() => void) | null = null
   let _reject: ((e: unknown) => void) | null = null
-  // hält ggf. den Cancel des Redirect-Downloads
   let redirectCancel: (() => void) | null = null
 
   const safeResolve = () => {
@@ -471,7 +480,7 @@ async function installOnLinuxFromFile(appImagePath: string): Promise<void> {
 
   const child = spawn(current, [], { detached: true, stdio: 'ignore', env: cleanEnv })
   child.unref()
-  app.exit(0)
+  app.quit()
 }
 
 function sendKioskSync(kiosk: boolean) {
@@ -495,12 +504,16 @@ function persistKioskAndBroadcast(kiosk: boolean) {
           phoneWorkMode: +config.phoneWorkMode,
           packetMax: +config.packetMax,
           mediaDelay: +config.mediaDelay,
+          visualAudioDelayMs: config.visualAudioDelayMs,
           wifiType: config.wifiType,
           wifiChannel: config.wifiChannel,
           primaryColorDark: config.primaryColorDark,
           primaryColorLight: config.primaryColorLight,
           highlightEditableFieldDark: config.highlightEditableFieldDark,
-          highlightEditableFieldLight: config.highlightEditableFieldLight
+          highlightEditableFieldLight: config.highlightEditableFieldLight,
+          dongleIcon120: config.dongleIcon120,
+          dongleIcon180: config.dongleIcon180,
+          dongleIcon256: config.dongleIcon256
         },
         null,
         2
@@ -706,6 +719,22 @@ app.whenReady().then(() => {
     saveSettings(settings)
     return true
   })
+  ipcMain.handle('settings:reset-dongle-icons', () => {
+    const next: ExtraConfig = {
+      ...config,
+      dongleIcon120: ICON_120_B64,
+      dongleIcon180: ICON_180_B64,
+      dongleIcon256: ICON_256_B64
+    }
+
+    saveSettings(next)
+
+    return {
+      dongleIcon120: next.dongleIcon120,
+      dongleIcon180: next.dongleIcon180,
+      dongleIcon256: next.dongleIcon256
+    }
+  })
 
   ipcMain.handle('app:getVersion', () => app.getVersion())
 
@@ -847,12 +876,16 @@ function saveSettings(next: ExtraConfig) {
         phoneWorkMode: +next.phoneWorkMode,
         packetMax: +next.packetMax,
         mediaDelay: +next.mediaDelay,
+        visualAudioDelayMs: next.visualAudioDelayMs,
         wifiType: next.wifiType,
         wifiChannel: next.wifiChannel,
         primaryColorDark: next.primaryColorDark,
         primaryColorLight: next.primaryColorLight,
         highlightEditableFieldDark: next.highlightEditableFieldDark,
-        highlightEditableFieldLight: next.highlightEditableFieldLight
+        highlightEditableFieldLight: next.highlightEditableFieldLight,
+        dongleIcon120: next.dongleIcon120,
+        dongleIcon180: next.dongleIcon180,
+        dongleIcon256: next.dongleIcon256
       },
       null,
       2
