@@ -1,13 +1,15 @@
 import { useCarplayStore } from '@store/store'
 import { SettingsLayout } from '../../layouts'
-import { SettingsNodeRenderer } from './SettingsNodeRenderer'
 import { useSmartSettingsFromSchema } from './hooks/useSmartSettingsFromSchema'
 import { settingsSchema } from '../../../routes/schemas.ts/schema'
 import { useNavigate, useParams } from 'react-router-dom'
 import { StackItem } from './components'
 import { getNodeByPath, getValueByPath } from './utils'
 import { Typography } from '@mui/material'
-import { FieldPage } from './components/FieldPage'
+import { SettingsFieldPage } from './components/SettingsFieldPage'
+import { SettingsFieldRow } from './components/SettingsFieldRow'
+import { Key } from 'react'
+import { SettingsNode } from 'renderer/src/routes'
 
 export const SettingsPage = () => {
   const navigate = useNavigate()
@@ -28,10 +30,10 @@ export const SettingsPage = () => {
   if ('path' in node && node.page) {
     return (
       <SettingsLayout onSave={save} isDirty={isDirty}>
-        <FieldPage
+        <SettingsFieldPage
           node={node}
           value={getValueByPath(state, node.path)}
-          onChange={(path, v) => handleFieldChange(path, v)}
+          onChange={(v) => handleFieldChange(node.path, v)}
         />
       </SettingsLayout>
     )
@@ -41,7 +43,7 @@ export const SettingsPage = () => {
 
   return (
     <SettingsLayout onSave={save} isDirty={isDirty}>
-      {children.map((child, index) => {
+      {children.map((child: SettingsNode, index: Key | null | undefined) => {
         if (child.type === 'route') {
           return (
             <StackItem key={index} withForwardIcon onClick={() => navigate(child.route)}>
@@ -55,7 +57,7 @@ export const SettingsPage = () => {
         }
 
         return (
-          <SettingsNodeRenderer
+          <SettingsFieldRow
             key={child.path}
             node={child}
             value={getValueByPath(state, child.path)}

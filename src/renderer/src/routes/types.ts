@@ -11,7 +11,7 @@ export enum RoutePath {
 
 export type BaseFieldNode = {
   label: string
-  path: string
+  path?: string
   page?: {
     title?: string
     description?: string
@@ -53,12 +53,12 @@ export type SliderNode = BaseFieldNode & {
   path: string
 }
 
-export interface SettingsCustomNode extends BaseFieldNode {
+export type SettingsCustomNode = BaseFieldNode & {
   type: 'custom'
   component: ComponentType
 }
 
-export type RouteNode = {
+export type RouteNode = BaseFieldNode & {
   type: 'route'
   label: string
   route: string

@@ -9,6 +9,7 @@ export const settingsSchema: SettingsNode = {
   type: 'route',
   route: 'new-settings',
   label: 'Settings',
+  path: 'settings',
   children: [generalSchema, audioSchema, videoSchema, appearanceSchema]
 }
 
