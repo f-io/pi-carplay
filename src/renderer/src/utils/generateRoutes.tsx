@@ -1,4 +1,4 @@
-import { RouteObject } from 'react-router-dom'
+import { RouteObject } from 'react-router'
 import { SettingsPage } from '../components/pages/newSettings/SettingsPage'
 import { SettingsNode } from '../routes'
 

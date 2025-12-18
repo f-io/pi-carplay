@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState, useLayoutEffect } from 'react'
 import { Box, Typography, useTheme, alpha } from '@mui/material'
 import { keyframes } from '@mui/system'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router'
 import { CommandMapping } from '@main/carplay/messages/common'
 
 import { ExtraConfig } from '@main/Globals'

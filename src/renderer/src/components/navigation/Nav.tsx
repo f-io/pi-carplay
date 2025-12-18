@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import { useStatusStore } from '../../store/store'
