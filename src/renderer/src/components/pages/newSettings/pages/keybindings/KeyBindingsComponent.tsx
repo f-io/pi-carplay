@@ -32,6 +32,8 @@ export function KeyBindings({ settings, updateKey }: KeyBindingsProps) {
   const [keyToBind, setKeyToBind] = useState<string>('')
   const [openWaiting, setOpenWaiting] = useState<boolean>(false)
 
+  console.log(settings)
+
   const setKey = useCallback(
     (e: KeyboardEvent) => {
       e.preventDefault()

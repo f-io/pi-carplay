@@ -1,4 +1,5 @@
 import { SettingsNode } from '../types'
+import { ScreenResolution } from '../../components/pages/newSettings/pages/screenResolution'
 
 export const videoSchema: SettingsNode = {
   type: 'route',
@@ -7,27 +8,25 @@ export const videoSchema: SettingsNode = {
   children: [
     {
       type: 'route',
-      route: 'resolution',
-      label: 'Resolution',
+      label: 'Stream Resolution',
+      route: 'streamResolution',
       children: [
         {
-          type: 'number',
-          label: 'Resolution',
-          path: 'video.resolution'
+          path: 'width',
+          type: 'custom',
+          label: 'Stream Resolution',
+          component: ScreenResolution
         }
       ]
     },
     {
-      type: 'route',
-      route: 'fps',
+      type: 'number',
       label: 'FPS',
-      children: [
-        {
-          type: 'number',
-          label: 'FPS',
-          path: 'video.fps'
-        }
-      ]
+      path: 'fps',
+      page: {
+        title: 'FPS',
+        description: 'FPS'
+      }
     }
   ]
 }

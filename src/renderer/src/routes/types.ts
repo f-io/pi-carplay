@@ -1,3 +1,5 @@
+import { ComponentType } from 'react'
+
 export enum RoutePath {
   Home = 'home',
   Settings = 'settings',
@@ -7,61 +9,60 @@ export enum RoutePath {
   Info = 'info'
 }
 
-export type SettingsPageComponentProps = {
-  value: any
-  onChange: (v: any) => void
-}
-
-export type SettingsPageComponent = React.ComponentType<SettingsPageComponentProps>
-
-export type BaseNode = {
+export type BaseFieldNode = {
   label: string
-}
-
-export type RouteNode = BaseNode & {
-  type: 'route'
-  route: string
-  children: SettingsNode[]
-  page?: SettingsPageComponent
-}
-
-export type ToggleNode = BaseNode & {
-  type: 'toggle'
   path: string
+  page?: {
+    title?: string
+    description?: string
+  }
 }
 
-export type CheckboxNode = BaseNode & {
+export type CheckboxNode = BaseFieldNode & {
   type: 'checkbox'
-  path: string
 }
 
-export type SelectNode = BaseNode & {
-  type: 'select'
-  path: string
-  options: Array<{ label: string; value: string }>
-}
-
-export type NumberNode = BaseNode & {
+export type NumberNode = BaseFieldNode & {
   type: 'number'
-  path: string
   min?: number
   max?: number
   step?: number
 }
 
-export type StringNode = BaseNode & {
+export type StringNode = BaseFieldNode & {
   type: 'string'
-  path: string
 }
 
-export type ColorNode = BaseNode & {
+export type ColorNode = BaseFieldNode & {
   type: 'color'
+}
+
+export type SelectNode = BaseFieldNode & {
+  type: 'select'
+  options: Array<{ label: string; value: string | number }>
+}
+
+export type ToggleNode = BaseFieldNode & {
+  type: 'toggle'
   path: string
 }
 
-export interface SettingsCustomNode extends BaseNode {
+// TODO
+export type SliderNode = BaseFieldNode & {
+  type: 'slider'
+  path: string
+}
+
+export interface SettingsCustomNode extends BaseFieldNode {
   type: 'custom'
-  component: React.ComponentType
+  component: ComponentType
+}
+
+export type RouteNode = {
+  type: 'route'
+  label: string
+  route: string
+  children: SettingsNode[]
 }
 
 export type SettingsNode =
@@ -72,4 +73,5 @@ export type SettingsNode =
   | NumberNode
   | StringNode
   | ColorNode
+  | SliderNode
   | SettingsCustomNode

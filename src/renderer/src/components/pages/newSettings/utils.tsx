@@ -23,13 +23,28 @@ export const setValueByPath = (obj: any, path: string, value: any) => {
   cur[keys[keys.length - 1]] = value
 }
 
-export const getNodeByPath = (root: SettingsNode, path: string[]): SettingsNode | null => {
-  let current: any = root
+export const getNodeByPath = (root: SettingsNode, segments: string[]): SettingsNode | null => {
+  let current: SettingsNode | null = root
 
-  for (const segment of path) {
-    const next = current.children?.find((c: any) => c.route === segment)
-    if (!next) return null
-    current = next
+  for (let i = 0; i < segments.length; i++) {
+    if (!current || current.type !== 'route') return null
+
+    const segment = segments[i]
+
+    const routeChild = current.children.find((c) => c.type === 'route' && c.route === segment)
+
+    if (routeChild) {
+      current = routeChild
+      continue
+    }
+
+    const leafChild = current.children.find((c) => 'path' in c && c.path === segment)
+
+    if (leafChild) {
+      return leafChild
+    }
+
+    return null
   }
 
   return current

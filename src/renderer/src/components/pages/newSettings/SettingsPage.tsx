@@ -7,6 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { StackItem } from './components'
 import { getNodeByPath, getValueByPath } from './utils'
 import { Typography } from '@mui/material'
+import { FieldPage } from './components/FieldPage'
 
 export const SettingsPage = () => {
   const navigate = useNavigate()
@@ -22,16 +23,15 @@ export const SettingsPage = () => {
     settings
   )
 
-  console.log('state', state)
-
   if (!node) return null
 
-  if (node.page) {
+  if ('path' in node && node.page) {
     return (
-      <SettingsLayout onSave={save} isDirty={false}>
-        <node.page
+      <SettingsLayout onSave={save} isDirty={isDirty}>
+        <FieldPage
+          node={node}
           value={getValueByPath(state, node.path)}
-          onChange={(v) => handleFieldChange(node.path, v)}
+          onChange={(path, v) => handleFieldChange(path, v)}
         />
       </SettingsLayout>
     )
@@ -41,21 +41,26 @@ export const SettingsPage = () => {
 
   return (
     <SettingsLayout onSave={save} isDirty={isDirty}>
-      {children.map((child) => {
+      {children.map((child, index) => {
         if (child.type === 'route') {
           return (
-            <StackItem key={child.route} withForwardIcon onClick={() => navigate(child.route)}>
+            <StackItem key={index} withForwardIcon onClick={() => navigate(child.route)}>
               <Typography>{child.label}</Typography>
             </StackItem>
           )
+        }
+
+        if (child.type === 'custom') {
+          return <child.component key={child.label} />
         }
 
         return (
           <SettingsNodeRenderer
             key={child.path}
             node={child}
-            state={state}
-            onChange={handleFieldChange}
+            value={getValueByPath(state, child.path)}
+            onChange={(v) => handleFieldChange(child.path, v)}
+            onClick={child.page ? () => navigate(child.path) : undefined}
           />
         )
       })}

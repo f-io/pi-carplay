@@ -1,4 +1,5 @@
 import { About } from '../../components/pages/newSettings/pages/about'
+import { KeyBindings } from '../../components/pages/newSettings/pages/keybindings'
 import { SettingsNode } from '../types'
 
 export const generalSchema: SettingsNode = {
@@ -17,16 +18,13 @@ export const generalSchema: SettingsNode = {
       label: 'Connections',
       children: [
         {
-          type: 'route',
-          route: 'car-name',
+          type: 'string',
           label: 'Car name',
-          children: [
-            {
-              type: 'page',
-              label: 'Car name',
-              path: 'carName'
-            }
-          ]
+          path: 'carName',
+          page: {
+            title: 'Car name',
+            description: 'Car name'
+          }
         },
         {
           type: 'checkbox',
@@ -40,13 +38,21 @@ export const generalSchema: SettingsNode = {
           children: [
             {
               type: 'number',
+              label: 'Wi-Fi number',
               path: 'wifiType',
-              label: 'Wi-Fi number'
+              page: {
+                title: 'Wi-Fi number',
+                description: 'Wi-Fi number'
+              }
             },
             {
               type: 'number',
+              label: 'Wi-Fi channel',
               path: 'wifiChannel',
-              label: 'Wi-Fi channel'
+              page: {
+                title: 'Wi-Fi channel',
+                description: 'Wi-Fi channel'
+              }
             }
           ]
         }
@@ -58,16 +64,34 @@ export const generalSchema: SettingsNode = {
       route: 'deviceandsources',
       children: [
         {
-          type: 'route',
-          route: 'camera',
+          type: 'select',
           label: 'Camera',
-          children: []
+          path: 'camera',
+          options: [
+            {
+              label: 'string',
+              value: 'string'
+            }
+          ],
+          page: {
+            title: 'Camera',
+            description: 'Camera'
+          }
         },
         {
-          type: 'route',
-          route: 'micType',
+          type: 'select',
           label: 'Mic type',
-          children: []
+          path: 'micType',
+          options: [
+            {
+              label: 'string',
+              value: 'string'
+            }
+          ],
+          page: {
+            title: 'Mic type',
+            description: 'Mic type'
+          }
         }
       ]
     },
@@ -77,22 +101,31 @@ export const generalSchema: SettingsNode = {
       route: 'main.dongle',
       children: [
         {
-          type: 'route',
-          route: 'iBoxVersion',
+          type: 'number',
           label: 'iBox Version',
-          children: []
+          path: 'iBoxVersion',
+          page: {
+            title: 'iBox Version',
+            description: 'iBox Version'
+          }
         },
         {
-          type: 'route',
-          route: 'phoneWorkMode',
+          type: 'number',
           label: 'Phone Work Mode',
-          children: []
+          path: 'phoneWorkMode',
+          page: {
+            title: 'Phone Work Mode',
+            description: 'Phone Work Mode'
+          }
         },
         {
-          type: 'route',
-          route: 'packetMax',
+          type: 'number',
           label: 'Packet Max',
-          children: []
+          path: 'packetMax',
+          page: {
+            title: 'Packet Max',
+            description: 'Packet Max'
+          }
         },
         {
           type: 'route',
@@ -100,32 +133,48 @@ export const generalSchema: SettingsNode = {
           label: 'Android Auto',
           children: [
             {
-              type: 'route',
-              route: 'dpi',
+              type: 'number',
               label: 'DPI',
-              children: []
+              path: 'dpi',
+              page: {
+                title: 'DPI',
+                description: 'DPI'
+              }
             },
             {
-              type: 'route',
-              route: 'format',
+              type: 'number',
               label: 'Format',
-              children: []
+              path: 'format',
+              page: {
+                title: 'Format',
+                description: 'Format'
+              }
             }
           ]
         }
       ]
     },
     {
-      type: 'route',
+      type: 'number',
       label: 'Car specific Audio Delay',
-      route: 'audiodelay',
-      children: []
+      path: 'audiodelay',
+      page: {
+        title: 'Car specific Audio Delay',
+        description: 'Car specific Audio Delay'
+      }
     },
     {
       type: 'route',
       label: 'Keybindings',
       route: 'keybindings',
-      children: []
+      children: [
+        {
+          path: 'keybindings',
+          type: 'custom',
+          label: 'Keybindings',
+          component: KeyBindings
+        }
+      ]
     },
     {
       type: 'route',
@@ -133,6 +182,7 @@ export const generalSchema: SettingsNode = {
       route: 'about',
       children: [
         {
+          path: 'about',
           type: 'custom',
           label: 'About',
           component: About

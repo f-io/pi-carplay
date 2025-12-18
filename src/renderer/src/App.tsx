@@ -141,7 +141,7 @@ function AppInner() {
 
       <Modal open={reverse} onClick={() => setReverse(false)}>
         <Box sx={modalStyle}>
-          <Camera settings={settings} />
+          <Camera />
         </Box>
       </Modal>
     </div>

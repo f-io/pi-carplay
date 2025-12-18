@@ -1,10 +1,8 @@
 import { SettingsLayout } from '@renderer/components/layouts/SettingsLayout'
 import { useCarplayStore } from '@store/store'
-import { useSmartSettings } from '../../../../hooks/useSmartSettings'
 import { ScreenResolutionSettingKey } from './types'
-import { TextField } from '@mui/material'
-import { CAR_NAME_MAX } from '../../../../../settings/constants'
-import NumberSpinner from '../../../../components/numberSpinner/numberSpinner'
+import NumberSpinner from '../../components/numberSpinner/numberSpinner'
+import { useSmartSettings } from '../../hooks/useSmartSettings'
 
 export const ScreenResolution: React.FC = () => {
   // FIXME types

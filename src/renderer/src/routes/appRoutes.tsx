@@ -1,8 +1,8 @@
 import { RoutePath } from './types'
-import { Home, Media, Camera, Info } from '../components/pages'
+import { Home, Media, Camera, Info, Settings } from '../components/pages'
 import { settingsRoutes } from './schemas.ts/schema'
 import { Layout } from '../components/layouts/Layout'
-import { SettingsPage } from '../components/pages/newSettings/SettingsPage'
+import { SettingsPage as NewSettingsPage } from '../components/pages/newSettings/SettingsPage'
 
 export const appRoutes = [
   {
@@ -26,8 +26,12 @@ export const appRoutes = [
         element: <Home />
       },
       {
+        path: `/${RoutePath.Settings}/*`,
+        element: <Settings />
+      },
+      {
         path: `/${RoutePath.NewSettings}/*`,
-        element: <SettingsPage />,
+        element: <NewSettingsPage />,
         children: settingsRoutes?.children ?? []
       }
     ]
