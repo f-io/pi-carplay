@@ -1,6 +1,6 @@
 import { SettingsNode } from '../types'
 import { StreamResolution } from '../../components/pages/newSettings/pages/streamResolution'
-import { ExtraConfig } from '../../../../main/Globals'
+import { ExtraConfig } from '@main/Globals'
 
 export const videoSchema: SettingsNode<ExtraConfig> = {
   type: 'route',
