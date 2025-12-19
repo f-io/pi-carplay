@@ -1,13 +1,15 @@
 import Box from '@mui/material/Box'
-import { useNavigate } from 'react-router'
-import { Button } from '@mui/material'
+import { useLocation, useNavigate } from 'react-router'
+import { Button, Typography } from '@mui/material'
 import Stack from '@mui/material/Stack'
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import { SettingsLayoutProps } from './types'
+import { last, upperFirst } from 'lodash'
 
 export const SettingsLayout = ({ children, onSave, isDirty }: SettingsLayoutProps) => {
   const navigate = useNavigate()
+  const location = useLocation()
   const handleNavigate = () => {
     navigate(-1)
   }
@@ -20,19 +22,41 @@ export const SettingsLayout = ({ children, onSave, isDirty }: SettingsLayoutProp
     }
   }
 
+  console.log(location.pathname)
+  const isShowActions = location.pathname !== '/settings'
+  const backButtonTitle = last(location.pathname.split('/'))
+
   return (
     <Box
-      sx={{ width: '100%', px: 3.5, py: 2.25, overflow: 'hidden', height: 'calc(100dvh - 64px)' }}
+      sx={{
+        width: '100%',
+        px: 3.5,
+        py: 2.25,
+        pl: 2.25,
+        overflow: 'hidden',
+        height: 'calc(100dvh - 64px)'
+      }}
     >
       <div
         style={{
           overflow: 'auto',
-          height: 'calc(100% - 40px)',
+          height: 'calc(100% - 0px)',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between'
         }}
       >
+        <Typography variant="h5" gutterBottom>
+          <div
+            onClick={handleNavigate}
+            style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.5rem' }}
+          >
+            {isShowActions && <ArrowBackIosOutlinedIcon />}
+
+            <div>{upperFirst(backButtonTitle)}</div>
+          </div>
+        </Typography>
+
         <Stack spacing={0} sx={{ overflow: 'auto', height: '100%' }}>
           {children}
         </Stack>
@@ -46,24 +70,27 @@ export const SettingsLayout = ({ children, onSave, isDirty }: SettingsLayoutProp
             bottom: '0.5rem',
             left: 0,
             width: '100%',
-            padding: '0 2rem'
+            padding: '0 3rem'
           }}
         >
-          <Button
-            onClick={handleNavigate}
-            sx={{
-              width: '100px',
-              padding: '0.5rem',
-              display: 'flex',
-              justifyContent: 'space-between',
-              gap: '0.5rem'
-            }}
-          >
-            <ArrowBackIosOutlinedIcon />
-            Back
-          </Button>
+          <div />
+          {/*{isShowActions && (*/}
+          {/*  <Button*/}
+          {/*    onClick={handleNavigate}*/}
+          {/*    sx={{*/}
+          {/*      width: '100px',*/}
+          {/*      padding: '0.5rem',*/}
+          {/*      display: 'flex',*/}
+          {/*      justifyContent: 'space-between',*/}
+          {/*      gap: '0.5rem'*/}
+          {/*    }}*/}
+          {/*  >*/}
+          {/*    <ArrowBackIosOutlinedIcon />*/}
+          {/*    Back*/}
+          {/*  </Button>*/}
+          {/*)}*/}
 
-          {onSave && (
+          {onSave && isShowActions && (
             <Button
               onClick={handleSave}
               sx={{

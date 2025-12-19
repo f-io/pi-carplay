@@ -10,6 +10,7 @@ import { useActiveControl, useFocus, useKeyDown } from './hooks'
 import { ROUTES } from './constants'
 import { AppContext } from './context'
 import { appRoutes } from './routes/appRoutes'
+import { AppLayout } from './components/layouts/AppLayout'
 
 const modalStyle = {
   position: 'absolute' as const,
@@ -122,11 +123,7 @@ function AppInner() {
   }, [settings, saveSettings, setCameraFound])
 
   return (
-    <div style={{ height: '100%', touchAction: 'none' }} id="main" className="App">
-      <div ref={navRef} id="nav-root">
-        <Nav receivingVideo={receivingVideo} settings={settings} />
-      </div>
-
+    <AppLayout navRef={navRef} receivingVideo={receivingVideo}>
       {settings && (
         <Carplay
           receivingVideo={receivingVideo}
@@ -144,7 +141,7 @@ function AppInner() {
           <Camera />
         </Box>
       </Modal>
-    </div>
+    </AppLayout>
   )
 }
 

@@ -53,8 +53,16 @@ export const Nav = ({ receivingVideo }: NavProps) => {
       aria-label="Navigation Tabs"
       variant="fullWidth"
       textColor="inherit"
-      indicatorColor="secondary"
+      visibleScrollbar={false}
       selectionFollowsFocus={false}
+      orientation="vertical"
+      sx={{
+        borderRight: '1px solid',
+        borderColor: 'divider',
+        '& .MuiTabs-indicator': {
+          display: 'none'
+        }
+      }}
     >
       {tabs.map((tab) => (
         <Tab

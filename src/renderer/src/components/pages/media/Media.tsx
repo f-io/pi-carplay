@@ -174,9 +174,9 @@ export const Media = () => {
       ref={rootRef}
       style={{
         position: 'fixed',
-        left: 0,
+        left: '75px',
         right: 0,
-        top,
+        top: 0,
         bottom: 0,
         zIndex: 1,
         display: 'flex',
