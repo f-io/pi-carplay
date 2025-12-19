@@ -3,8 +3,8 @@ export enum ROUTES {
   MEDIA = '/media',
   CAMERA = '/camera',
   INFO = '/info',
+  OLD_SETTINGS = '/old-settings',
   SETTINGS = '/settings',
-  NEW_SETTINGS = '/new-settings',
   QUIT = 'quit'
 }
 

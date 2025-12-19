@@ -48,14 +48,14 @@ export const useTabsConfig: (receivingVideo: boolean) => TabConfig[] = (receivin
     { label: 'Info', path: ROUTES.INFO, icon: <InfoOutlinedIcon sx={{ fontSize: 30 }} /> },
     {
       label: 'Settings',
-      path: ROUTES.SETTINGS,
+      path: ROUTES.OLD_SETTINGS,
       icon: <SettingsOutlinedIcon sx={{ fontSize: 30 }} />
     },
     {
       label: 'New Settings',
-      path: ROUTES.NEW_SETTINGS,
+      path: ROUTES.SETTINGS,
       icon: <SettingsOutlinedIcon sx={{ fontSize: 30 }} />
-    },
-    { label: 'Quit', path: 'quit', icon: <PowerSettingsNewIcon sx={{ fontSize: 30 }} /> }
+    }
+    // { label: 'Quit', path: 'quit', icon: <PowerSettingsNewIcon sx={{ fontSize: 30 }} /> }
   ]
 }
