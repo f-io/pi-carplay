@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>pi-carplay – Apple CarPlay & Android Auto on Linux</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="canonical" href="https://f-io.github.io/pi-carplay/" />
+    <link rel="icon" type="image/png" sizes="512x512" href="images/pi-carplay.png" />
+    <link rel="apple-touch-icon" href="images/pi-carplay.png" />
+
+    <meta
+      name="description"
+      content="Open-source Apple CarPlay and Android Auto head unit for Linux. Hardware-accelerated video, low-latency audio, and support for both touchscreen and non-touch controls."
+    />
+
+    <meta property="og:title" content="pi-carplay – Apple CarPlay & Android Auto on Linux" />
+    <meta property="og:url" content="https://f-io.github.io/pi-carplay/" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:description"
+      content="Open-source Apple CarPlay and Android Auto head unit for Linux with hardware-accelerated video and low-latency audio."
+    />
+    <meta property="og:image" content="https://f-io.github.io/pi-carplay/images/banner.png" />
+    <meta property="og:image:alt" content="pi-carplay banner" />
+
+    <meta name="theme-color" content="#0e1116" />
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+
+      body {
+        margin: 0;
+        padding: 0 1.5rem 3rem;
+        background-color: #0e1116;
+        color: #e5e7eb;
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          sans-serif;
+        line-height: 1.6;
+      }
+
+      main {
+        max-width: 960px;
+        margin: 0 auto;
+      }
+
+      header {
+        text-align: center;
+        margin: 2rem 0 1rem;
+      }
+
+      footer {
+        max-width: 960px;
+        margin: 2rem auto 0;
+        padding-top: 1.25rem;
+        border-top: 1px solid #1f2933;
+        text-align: center;
+      }
+
+      footer a {
+        color: #9ca3af;
+      }
+
+      footer a:hover {
+        color: #e5e7eb;
+      }
+
+      h1,
+      h2,
+      h3 {
+        color: #f9fafb;
+      }
+
+      h1 {
+        font-family:
+          Menlo, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+          'Courier New', monospace;
+        font-weight: 400;
+        font-size: 2rem;
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.4rem;
+        border-bottom: 1px solid #272a33;
+      }
+
+      h2 {
+        margin-top: 2.5rem;
+        margin-bottom: 0.6rem;
+        font-size: 1.4rem;
+        font-weight: 600;
+        padding-bottom: 0.25rem;
+        border-bottom: 1px solid #272a33;
+      }
+
+      p {
+        margin: 0.4rem 0;
+      }
+
+      a {
+        color: #60a5fa;
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .banner > img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 0.75rem;
+        display: block;
+        margin: 0 auto 1.5rem;
+      }
+
+      ul {
+        margin: 0.4rem 0 0.8rem 1.2rem;
+        padding: 0;
+      }
+
+      li {
+        margin: 0.2rem 0;
+      }
+
+      .screenshots {
+        text-align: center;
+        margin-top: 1.5rem;
+      }
+
+      .screenshots img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 0.75rem;
+        margin: 0.5rem;
+      }
+
+      hr {
+        border: none;
+        border-top: 1px solid #1f2933;
+        margin: 2rem 0;
+      }
+
+      small {
+        color: #9ca3af;
+        font-size: 0.85rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header class="banner">
+        <img src="images/banner.png" alt="pi-carplay banner" />
+        <p style="text-align: center; margin: 0.5rem 0 1.4rem">
+          <img
+            alt="Release"
+            src="https://img.shields.io/github/v/release/f-io/pi-carplay?label=release"
+          />
+          <img
+            alt="Build main"
+            src="https://img.shields.io/github/actions/workflow/status/f-io/pi-carplay/build.yml?branch=main&label=build%20main&style=flat"
+          />
+          <img
+            alt="TS main"
+            src="https://img.shields.io/github/actions/workflow/status/f-io/pi-carplay/typecheck.yml?branch=main&label=TS%20main&style=flat"
+          />
+        </p>
+      </header>
+
+      <h1>Apple CarPlay & Android Auto on Linux</h1>
+
+      <p><strong>Standalone Apple CarPlay and Android Auto head unit for Linux</strong></p>
+
+      <p>
+        pi-carplay is an open-source project that provides a standalone
+        <strong>Apple CarPlay and Android Auto head unit</strong> for Linux. It runs on standard
+        Linux desktops (x86_64) as well as various ARM-based single-board computers, including
+        Raspberry Pi and other embedded platforms.
+      </p>
+
+      <h2>Features</h2>
+      <ul>
+        <li>CarPlay support via compatible USB dongles</li>
+        <li>Hardware-accelerated video pipeline</li>
+        <li>Low-latency audio output via PipeWire</li>
+        <li>Voice input support</li>
+        <li>Touchscreen and multi-touch support</li>
+        <li>Full non-touch navigation via D-Pad and button controls</li>
+        <li>
+          Optional Android Auto compatibility (experimental; not fully integrated or actively
+          tested)
+        </li>
+        <li>UI optimized for low-resolution OEM in-car displays</li>
+      </ul>
+
+      <h2>Supported Hardware</h2>
+      <p>pi-carplay runs on:</p>
+      <ul>
+        <li>Linux desktops (Ubuntu, Debian, Arch, Fedora, etc.)</li>
+        <li>Raspberry Pi OS (Pi 4, Pi 5, CM4, CM5)</li>
+        <li>Other ARM64 Linux devices capable of running Electron (AppImage)</li>
+      </ul>
+
+      <p>Supported dongles include:</p>
+      <ul>
+        <li>Carlinkit CPC200 series (CCPA, CCPW)</li>
+      </ul>
+
+      <h2>Installation</h2>
+      <p>
+        Pre-built binaries for Linux are available here:
+        <a href="https://github.com/f-io/pi-carplay/releases"
+          >https://github.com/f-io/pi-carplay/releases</a
+        >
+      </p>
+
+      <h2>How it works</h2>
+      <p>
+        pi-carplay does not implement CarPlay itself. It relies on compatible USB dongles that
+        handle the CarPlay protocol. These dongles usually ship with a <em>questionable</em> Android
+        app — and because we love Linux ❤️ and value our sanity, we decided to build a solution
+        instead.
+      </p>
+      <p>
+        A fully native implementation is technically possible, but legally messy. Using existing
+        dongles keeps those hurdles on the hardware manufacturers' side.
+      </p>
+
+      <h2>Build Environment</h2>
+      <p>
+        <img
+          alt="Node"
+          src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/f-io/pi-carplay/version/.github/badges/main-node.json"
+        />
+        <img
+          alt="npm"
+          src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/f-io/pi-carplay/version/.github/badges/main-npm.json"
+        />
+        <img
+          alt="electron"
+          src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/f-io/pi-carplay/version/.github/badges/main-electron.json"
+        />
+        <img
+          alt="chrome"
+          src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/f-io/pi-carplay/version/.github/badges/main-electron-date.json"
+        />
+        <img
+          alt="release"
+          src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/f-io/pi-carplay/version/.github/badges/main-electron-chromium.json"
+        />
+      </p>
+
+      <h2>Screenshots</h2>
+
+      <p style="text-align: center">
+        <img src="images/carplay.png" alt="CarPlay" width="58%" />
+      </p>
+
+      <p style="text-align: center">
+        <img src="images/carplay_no_phone.png" alt="No Phone" width="48%" />
+        &emsp;
+        <img src="images/media.png" alt="Media" width="48%" />
+      </p>
+
+      <p style="text-align: center">
+        <img src="images/info.png" alt="Info" width="48%" />
+        &emsp;
+        <img src="images/settings.png" alt="Settings" width="48%" />
+      </p>
+
+      <h2>Documentation</h2>
+      <p>
+        Detailed setup steps can be found in the GitHub repository:
+        <a href="https://github.com/f-io/pi-carplay">https://github.com/f-io/pi-carplay</a>
+      </p>
+
+      <h2>Contributing</h2>
+      <p>
+        Contributions are welcome. Issue reports, pull requests and hardware compatibility findings
+        help improve the project.
+      </p>
+
+      <h2>Disclaimer</h2>
+      <small>
+        Apple and CarPlay are trademarks of Apple Inc.<br />
+        Android and Android Auto are trademarks of Google LLC.<br />
+        This project is not affiliated with or endorsed by Apple or Google.<br />
+        All product names, logos and brands are the property of their respective owners.
+      </small>
+    </main>
+    <footer>
+      <small>
+        <a href="https://f-io.github.io/">f-io.github.io</a>
+      </small>
+    </footer>
+  </body>
+</html>
