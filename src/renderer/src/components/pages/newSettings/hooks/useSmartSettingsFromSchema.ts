@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useSmartSettings } from './useSmartSettings'
 import { getValueByPath } from '../utils'
 import { SettingsNode } from '../../../../routes'
-import { ExtraConfig } from '../../../../../../main/Globals'
+import { ExtraConfig } from '@main/Globals'
 
 type FlatSettings = Record<string, any>
 type Overrides<T> = Record<

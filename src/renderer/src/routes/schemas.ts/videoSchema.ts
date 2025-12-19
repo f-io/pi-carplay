@@ -1,5 +1,5 @@
 import { SettingsNode } from '../types'
-import { ScreenResolution } from '../../components/pages/newSettings/pages/screenResolution'
+import { StreamResolution } from '../../components/pages/newSettings/pages/streamResolution'
 import { ExtraConfig } from '../../../../main/Globals'
 
 export const videoSchema: SettingsNode<ExtraConfig> = {
@@ -12,14 +12,14 @@ export const videoSchema: SettingsNode<ExtraConfig> = {
       type: 'route',
       label: 'Stream Resolution',
       route: 'streamResolution',
-      path: '',
+      path: 'height',
       children: [
         {
           path: 'width',
           type: 'custom',
           label: 'Stream Resolution',
           displayValue: true,
-          component: ScreenResolution
+          component: StreamResolution
         }
       ]
     },

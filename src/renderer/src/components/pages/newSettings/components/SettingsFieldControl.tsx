@@ -1,7 +1,7 @@
 import { MenuItem, Select, Slider, Switch, TextField } from '@mui/material'
 import NumberSpinner from './numberSpinner/numberSpinner'
 import { SettingsNode } from '../../../../routes'
-import { ExtraConfig } from '../../../../../../main/Globals'
+import { ExtraConfig } from '@main/Globals'
 
 type Props<T> = {
   node: SettingsNode<ExtraConfig>

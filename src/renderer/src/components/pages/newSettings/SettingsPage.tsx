@@ -51,6 +51,8 @@ export const SettingsPage = () => {
   return (
     <SettingsLayout onSave={save} isDirty={isDirty}>
       {children.map((child: SettingsNode<ExtraConfig>, index: Key | null | undefined) => {
+        const _path = child.path as string
+
         if (child.type === 'route') {
           return (
             <StackItem
@@ -65,10 +67,15 @@ export const SettingsPage = () => {
         }
 
         if (child.type === 'custom') {
-          return <child.component key={child.label} />
+          return (
+            <child.component
+              key={child.label}
+              state={state}
+              node={child}
+              onChange={(v) => handleFieldChange(_path, v)}
+            />
+          )
         }
-
-        const _path = child.path as string
 
         return (
           <SettingsFieldRow
