@@ -1,14 +1,25 @@
 import { SettingsNode } from '../types'
+import { ExtraConfig } from '../../../../main/Globals'
 
-export const audioSchema: SettingsNode = {
+const audioValueTransform = {
+  toView: (v: number) => Math.round(v * 100),
+  fromView: (v: number) => v / 100,
+  format: (v: number) => `${v}%`
+}
+
+export const audioSchema: SettingsNode<ExtraConfig> = {
   type: 'route',
   route: 'audio',
   label: 'Audio',
+  path: '',
   children: [
     {
       type: 'slider',
       label: 'Music',
       path: 'audioVolume',
+      displayValue: true,
+      displayValueUnit: '%',
+      valueTransform: audioValueTransform,
       page: {
         title: 'Music',
         description: 'Music'
@@ -18,6 +29,9 @@ export const audioSchema: SettingsNode = {
       type: 'slider',
       label: 'Navigation',
       path: 'navVolume',
+      displayValue: true,
+      displayValueUnit: '%',
+      valueTransform: audioValueTransform,
       page: {
         title: 'Navigation',
         description: 'Navigation'
@@ -27,6 +41,9 @@ export const audioSchema: SettingsNode = {
       type: 'slider',
       label: 'Siri',
       path: 'siriVolume',
+      displayValue: true,
+      displayValueUnit: '%',
+      valueTransform: audioValueTransform,
       page: {
         title: 'Siri',
         description: 'Siri'
@@ -36,6 +53,9 @@ export const audioSchema: SettingsNode = {
       type: 'slider',
       label: 'Phone call',
       path: 'callVolume',
+      displayValue: true,
+      displayValueUnit: '%',
+      valueTransform: audioValueTransform,
       page: {
         title: 'Phone call',
         description: 'Phone call'
@@ -45,6 +65,13 @@ export const audioSchema: SettingsNode = {
       type: 'number',
       label: 'Audio Buffering',
       path: 'audioJitterMs', // TODO is it correct path in the config.json?
+      displayValue: true,
+      displayValueUnit: 'ms',
+      valueTransform: {
+        toView: (v: number) => Math.round(v * 100),
+        fromView: (v: number) => v / 100,
+        format: (v: number) => `${v}ms`
+      },
       page: {
         title: 'Audio Buffering',
         description: 'Audio Buffering'
@@ -53,7 +80,8 @@ export const audioSchema: SettingsNode = {
     {
       type: 'select',
       label: 'Sampling Frequency',
-      path: 'camera',
+      path: 'mediaSound',
+      displayValue: true,
       options: [
         {
           label: '44.1 kHz',
@@ -73,6 +101,7 @@ export const audioSchema: SettingsNode = {
       type: 'select',
       label: 'Call Quality',
       path: 'callquality',
+      displayValue: true,
       options: [
         {
           label: 'Low',

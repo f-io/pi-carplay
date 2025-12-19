@@ -1,8 +1,9 @@
 import { RouteObject } from 'react-router'
 import { SettingsPage } from '../components/pages/newSettings/SettingsPage'
 import { SettingsNode } from '../routes'
+import { ExtraConfig } from '../../../main/Globals'
 
-export const generateRoutes = (node: SettingsNode): RouteObject | null => {
+export const generateRoutes = (node: SettingsNode<ExtraConfig>): RouteObject | null => {
   if (node.type !== 'route') return null
 
   return {

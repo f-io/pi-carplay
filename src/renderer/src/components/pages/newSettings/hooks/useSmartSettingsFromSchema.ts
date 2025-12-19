@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { useSmartSettings } from './useSmartSettings'
 import { getValueByPath } from '../utils'
 import { SettingsNode } from '../../../../routes'
+import { ExtraConfig } from '../../../../../../main/Globals'
 
 type FlatSettings = Record<string, any>
 type Overrides<T> = Record<
@@ -13,7 +14,7 @@ type Overrides<T> = Record<
 >
 
 const walkSchema = (
-  node: SettingsNode,
+  node: SettingsNode<ExtraConfig>,
   settings: any,
   initial: FlatSettings,
   overrides: Overrides<FlatSettings>
@@ -31,7 +32,10 @@ const walkSchema = (
   }
 }
 
-export const useSmartSettingsFromSchema = (rootSchema: SettingsNode, settings: any) => {
+export const useSmartSettingsFromSchema = (
+  rootSchema: SettingsNode<ExtraConfig>,
+  settings: any
+) => {
   const { initialState, overrides } = useMemo(() => {
     const initialState: FlatSettings = {}
     const overrides: Overrides<FlatSettings> = {}

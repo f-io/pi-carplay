@@ -1,9 +1,11 @@
 import { SettingsNode } from '../types'
+import { ExtraConfig } from '../../../../main/Globals'
 
-export const appearanceSchema: SettingsNode = {
+export const appearanceSchema: SettingsNode<ExtraConfig> = {
   type: 'route',
   route: 'appearance',
   label: 'Appearance',
+  path: '',
   children: [
     {
       type: 'color',

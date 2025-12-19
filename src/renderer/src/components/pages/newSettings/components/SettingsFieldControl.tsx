@@ -1,9 +1,10 @@
 import { MenuItem, Select, Slider, Switch, TextField } from '@mui/material'
 import NumberSpinner from './numberSpinner/numberSpinner'
 import { SettingsNode } from '../../../../routes'
+import { ExtraConfig } from '../../../../../../main/Globals'
 
 type Props<T> = {
-  node: SettingsNode
+  node: SettingsNode<ExtraConfig>
   value: T
   onChange: (v: T) => void
 }

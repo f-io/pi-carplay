@@ -1,9 +1,10 @@
 import { Typography } from '@mui/material'
 import { SettingsFieldControl } from './SettingsFieldControl'
 import { SettingsNode } from '../../../../routes'
+import { ExtraConfig } from '@main/Globals'
 
 type Props<T> = {
-  node: SettingsNode & { path: string }
+  node: SettingsNode<ExtraConfig>
   value: T
   onChange: (v: T) => void
 }

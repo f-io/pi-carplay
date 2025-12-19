@@ -1,4 +1,5 @@
 import { useCarplayStore } from '@store/store'
+import { ExtraConfig } from '@main/Globals'
 import { SettingsLayout } from '../../layouts'
 import { useSmartSettingsFromSchema } from './hooks/useSmartSettingsFromSchema'
 import { settingsSchema } from '../../../routes/schemas.ts/schema'
@@ -18,6 +19,9 @@ export const SettingsPage = () => {
   const path = splat ? splat.split('/') : []
 
   const node = getNodeByPath(settingsSchema, path)
+  // TODO Fixme
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const settings = useCarplayStore((s) => s.settings)
 
   const { state, isDirty, handleFieldChange, save } = useSmartSettingsFromSchema(
@@ -39,14 +43,22 @@ export const SettingsPage = () => {
     )
   }
 
+  // TODO Fixme
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const children = node.children ?? []
 
   return (
     <SettingsLayout onSave={save} isDirty={isDirty}>
-      {children.map((child: SettingsNode, index: Key | null | undefined) => {
+      {children.map((child: SettingsNode<ExtraConfig>, index: Key | null | undefined) => {
         if (child.type === 'route') {
           return (
-            <StackItem key={index} withForwardIcon onClick={() => navigate(child.route)}>
+            <StackItem
+              key={index}
+              withForwardIcon
+              node={child}
+              onClick={() => navigate(child.route)}
+            >
               <Typography>{child.label}</Typography>
             </StackItem>
           )
@@ -56,13 +68,16 @@ export const SettingsPage = () => {
           return <child.component key={child.label} />
         }
 
+        const _path = child.path as string
+
         return (
           <SettingsFieldRow
-            key={child.path}
+            key={_path}
             node={child}
-            value={getValueByPath(state, child.path)}
-            onChange={(v) => handleFieldChange(child.path, v)}
-            onClick={child.page ? () => navigate(child.path) : undefined}
+            state={state}
+            value={getValueByPath(state, _path)}
+            onChange={(v) => handleFieldChange(_path, v)}
+            onClick={child.page ? () => navigate(_path) : undefined}
           />
         )
       })}

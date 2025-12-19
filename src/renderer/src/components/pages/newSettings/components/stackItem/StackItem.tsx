@@ -104,11 +104,37 @@ const Item = styled(Paper)(({ theme }) => ({
   }
 }))
 
-export const StackItem = ({ children, value, withForwardIcon, onClick }: StackItemProps) => {
+export const StackItem = ({
+  children,
+  value,
+  node,
+  showValue,
+  withForwardIcon,
+  onClick
+}: StackItemProps) => {
+  const viewValue = node?.valueTransform?.toView ? node?.valueTransform.toView(value) : value
+
+  let displayValue = node?.valueTransform?.format
+    ? node.valueTransform.format(viewValue)
+    : `${viewValue}${node?.displayValueUnit ?? ''}`
+
+  if (node?.type === 'select') {
+    const option = node?.options.find((o) => o.value === value)
+
+    displayValue = option?.label || ''
+  }
+
+  // TODO Fix me
+  if (displayValue === 'null' || displayValue === 'undefined') {
+    displayValue = '---'
+  }
+
   return (
     <Item onClick={onClick}>
       {children}
-      {value && <span>{value}</span>}
+      {showValue && (value || displayValue) && (
+        <div style={{ whiteSpace: 'nowrap' }}>{displayValue}</div>
+      )}
       {withForwardIcon && <ArrowForwardIosOutlinedIcon sx={{ color: 'inherit' }} />}
     </Item>
   )

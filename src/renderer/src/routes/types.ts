@@ -9,69 +9,102 @@ export enum RoutePath {
   Info = 'info'
 }
 
-export type BaseFieldNode = {
+export type ValueTransform<StoreValue, ViewValue = StoreValue> = {
+  toView?: (value: StoreValue) => ViewValue
+  fromView?: (value: ViewValue) => StoreValue
+  format?: (value: ViewValue) => string
+}
+
+export type BaseFieldNode<TStore, K extends keyof TStore, ViewValue = TStore[K]> = {
   label: string
-  path?: string
+  path: K
+  displayValue?: boolean
+  displayValueUnit?: string
+  valueTransform?: ValueTransform<TStore[K], ViewValue>
   page?: {
     title?: string
     description?: string
   }
 }
 
-export type CheckboxNode = BaseFieldNode & {
+export type CheckboxNode<TStore, K extends keyof TStore> = BaseFieldNode<TStore, K> & {
   type: 'checkbox'
 }
 
-export type NumberNode = BaseFieldNode & {
+export type NumberNode<TStore, K extends keyof TStore, ViewValue = TStore[K]> = BaseFieldNode<
+  TStore,
+  K,
+  ViewValue
+> & {
   type: 'number'
   min?: number
   max?: number
   step?: number
 }
 
-export type StringNode = BaseFieldNode & {
+export type StringNode<TStore, K extends keyof TStore, ViewValue = TStore[K]> = BaseFieldNode<
+  TStore,
+  K,
+  ViewValue
+> & {
   type: 'string'
 }
 
-export type ColorNode = BaseFieldNode & {
+export type ColorNode<TStore, K extends keyof TStore, ViewValue = TStore[K]> = BaseFieldNode<
+  TStore,
+  K,
+  ViewValue
+> & {
   type: 'color'
 }
 
-export type SelectNode = BaseFieldNode & {
+export type SelectNode<TStore, K extends keyof TStore, ViewValue = TStore[K]> = BaseFieldNode<
+  TStore,
+  K,
+  ViewValue
+> & {
   type: 'select'
   options: Array<{ label: string; value: string | number }>
 }
 
-export type ToggleNode = BaseFieldNode & {
+export type ToggleNode<TStore, K extends keyof TStore, ViewValue = TStore[K]> = BaseFieldNode<
+  TStore,
+  K,
+  ViewValue
+> & {
   type: 'toggle'
   path: string
 }
 
 // TODO
-export type SliderNode = BaseFieldNode & {
+export type SliderNode<TStore, K extends keyof TStore, ViewValue = TStore[K]> = BaseFieldNode<
+  TStore,
+  K,
+  ViewValue
+> & {
   type: 'slider'
   path: string
 }
 
-export type SettingsCustomNode = BaseFieldNode & {
+export type SettingsCustomNode<TStore> = BaseFieldNode<TStore, any, any> & {
   type: 'custom'
   component: ComponentType
 }
 
-export type RouteNode = BaseFieldNode & {
+export type RouteNode<TStore> = BaseFieldNode<TStore, any, any> & {
   type: 'route'
   label: string
   route: string
-  children: SettingsNode[]
+  children: SettingsNode<TStore>[]
 }
 
-export type SettingsNode =
-  | RouteNode
-  | ToggleNode
-  | CheckboxNode
-  | SelectNode
-  | NumberNode
-  | StringNode
-  | ColorNode
-  | SliderNode
-  | SettingsCustomNode
+export type SettingsNode<TStore> =
+  | RouteNode<TStore>
+  | ToggleNode<TStore, keyof TStore>
+  | CheckboxNode<TStore, keyof TStore>
+  | SelectNode<TStore, keyof TStore, any>
+  | NumberNode<TStore, keyof TStore, any>
+  | StringNode<TStore, keyof TStore>
+  | ColorNode<TStore, keyof TStore>
+  | SliderNode<TStore, keyof TStore, any>
+  | SettingsCustomNode<TStore>

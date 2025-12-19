@@ -1,4 +1,5 @@
 import { SettingsNode } from '../../../routes'
+import { ExtraConfig } from '@main/Globals'
 
 export const getValueByPath = (obj: any, path: string) => {
   if (!obj || !path) return undefined
@@ -23,8 +24,11 @@ export const setValueByPath = (obj: any, path: string, value: any) => {
   cur[keys[keys.length - 1]] = value
 }
 
-export const getNodeByPath = (root: SettingsNode, segments: string[]): SettingsNode | null => {
-  let current: SettingsNode | null = root
+export const getNodeByPath = (
+  root: SettingsNode<ExtraConfig>,
+  segments: string[]
+): SettingsNode<ExtraConfig> | null => {
+  let current: SettingsNode<ExtraConfig> | null = root
 
   for (let i = 0; i < segments.length; i++) {
     if (!current || current.type !== 'route') return null

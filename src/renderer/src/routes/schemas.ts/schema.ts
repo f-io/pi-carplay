@@ -4,8 +4,9 @@ import { audioSchema } from './audioSchema'
 import { videoSchema } from './videoSchema'
 import { appearanceSchema } from './appearanceSchema'
 import { SettingsNode } from '../types'
+import { ExtraConfig } from '../../../../main/Globals'
 
-export const settingsSchema: SettingsNode = {
+export const settingsSchema: SettingsNode<ExtraConfig> = {
   type: 'route',
   route: 'new-settings',
   label: 'Settings',
