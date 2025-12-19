@@ -1,5 +1,6 @@
 import { About } from '../../components/pages/newSettings/pages/about'
 import { KeyBindings } from '../../components/pages/newSettings/pages/keybindings'
+import { Camera } from '../../components/pages/newSettings/pages/camera'
 import { SettingsNode } from '../types'
 import { ExtraConfig } from '../../../../main/Globals'
 
@@ -42,13 +43,23 @@ export const generalSchema: SettingsNode<ExtraConfig> = {
           path: '',
           children: [
             {
-              type: 'number',
-              label: 'Wi-Fi number',
+              type: 'select',
+              label: 'Wi-Fi frequency',
               path: 'wifiType',
               displayValue: true,
+              options: [
+                {
+                  label: '2.4ghz',
+                  value: '2.4ghz'
+                },
+                {
+                  label: '5ghz',
+                  value: '5ghz'
+                }
+              ],
               page: {
-                title: 'Wi-Fi number',
-                description: 'Wi-Fi number'
+                title: 'Wi-Fi frequency',
+                description: 'Wi-Fi frequency'
               }
             },
             {
@@ -72,20 +83,19 @@ export const generalSchema: SettingsNode<ExtraConfig> = {
       path: '',
       children: [
         {
-          type: 'select',
+          type: 'route',
           label: 'Camera',
-          path: 'camera',
+          route: 'camera',
+          path: '',
           displayValue: true,
-          options: [
+          children: [
             {
-              label: 'string',
-              value: 'string'
+              path: 'camera',
+              type: 'custom',
+              label: 'Camera',
+              component: Camera
             }
-          ],
-          page: {
-            title: 'Camera',
-            description: 'Camera'
-          }
+          ]
         },
         {
           type: 'select',
@@ -94,8 +104,12 @@ export const generalSchema: SettingsNode<ExtraConfig> = {
           displayValue: true,
           options: [
             {
-              label: 'string',
-              value: 'string'
+              label: 'OS default',
+              value: 'os'
+            },
+            {
+              label: 'BOX',
+              value: 'box'
             }
           ],
           page: {
@@ -188,7 +202,7 @@ export const generalSchema: SettingsNode<ExtraConfig> = {
       path: '',
       children: [
         {
-          path: 'keybindings',
+          path: 'bindings',
           type: 'custom',
           label: 'Keybindings',
           component: KeyBindings

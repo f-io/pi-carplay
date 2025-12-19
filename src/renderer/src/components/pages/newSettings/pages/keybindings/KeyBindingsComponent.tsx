@@ -28,7 +28,7 @@ const style = {
   justifyContent: 'center'
 }
 
-export function KeyBindings({ settings, updateKey }: KeyBindingsProps) {
+export function KeyBindings({ state, updateKey }: KeyBindingsProps) {
   const [keyToBind, setKeyToBind] = useState<string>('')
   const [openWaiting, setOpenWaiting] = useState<boolean>(false)
 
@@ -43,13 +43,13 @@ export function KeyBindings({ settings, updateKey }: KeyBindingsProps) {
         return
       }
 
-      const bindings = { ...settings.bindings }
+      const bindings = { ...state.bindings }
       bindings[keyToBind] = e.code
       updateKey('bindings', bindings)
       setOpenWaiting(false)
       setKeyToBind('')
     },
-    [keyToBind, settings.bindings, updateKey]
+    [keyToBind, state, updateKey]
   )
 
   useEffect(() => {
@@ -66,10 +66,15 @@ export function KeyBindings({ settings, updateKey }: KeyBindingsProps) {
     setOpenWaiting(true)
   }
 
+  console.log(state)
+
   return (
     <>
+      <Typography variant="h6" gutterBottom>
+        Key bindings
+      </Typography>
       <Grid container spacing={2}>
-        {Object.entries(settings?.bindings ?? {}).map(([action, code]) => (
+        {Object.entries(state?.bindings ?? {}).map(([action, code]) => (
           <Grid size={{ xs: 3 }} key={action}>
             <Item>
               <Typography variant="subtitle2">{action}</Typography>
