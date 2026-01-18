@@ -264,19 +264,23 @@ export class DongleDriver extends EventEmitter {
           const headerRes = await dev.transferIn(inEp.endpointNumber, MessageHeader.dataLength)
           if (this._closing) break
 
-          const headerBuf = headerRes?.data?.buffer
-          if (!headerBuf) throw new HeaderBuildError('Empty header')
+          const headerData = headerRes?.data
+          if (!headerData) throw new HeaderBuildError('Empty header')
 
-          const headerBuffer = Buffer.from(headerBuf)
+          const headerBuffer = Buffer.from(
+            headerData.buffer,
+            headerData.byteOffset,
+            headerData.byteLength
+          )
           const header = MessageHeader.fromBuffer(headerBuffer)
           let extra: Buffer | undefined
 
           if (header.length) {
             const extraRes = await dev.transferIn(inEp.endpointNumber, header.length)
             if (this._closing) break
-            const extraBuf = extraRes?.data?.buffer
-            if (!extraBuf) throw new Error('Failed to read extra data')
-            extra = Buffer.from(extraBuf)
+            const extraData = extraRes?.data
+            if (!extraData) throw new Error('Failed to read extra data')
+            extra = Buffer.from(extraData.buffer, extraData.byteOffset, extraData.byteLength)
           }
 
           const msg = header.toMessage(extra)
