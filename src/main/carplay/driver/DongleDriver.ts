@@ -23,6 +23,24 @@ import {
 const CONFIG_NUMBER = 1
 const MAX_ERROR_COUNT = 5
 
+const SKIP_TYPES = new Set<number>([
+  0x06, // High-volume binary frames (video stream payload)
+  0x07, // High-volume binary frames (audio stream payload)
+  0xa3, // Opaque vendor/session/auth blob (large, not human-readable)
+  0x1001, // Audio/video transport payload
+  0x1002, // Audio/video transport payload
+  0x1003 // Audio/video transport payload
+])
+
+const ASCII_TYPES = new Set<number>([
+  0x0d, // Short ASCII identifier (e.g. "carplay-1")
+  0x0e, // Short ASCII identifier (e.g. "carplay-1")
+  0x12, // Bluetooth MAC + device name string
+  0x18, // URL-like connect string (e.g. hicar://car/connect?... )
+  0x19, // JSON payloads (BoxInfo, MD info, device metadata)
+  0xcc // Firmware / software version string
+])
+
 export enum HandDriveType {
   LHD = 0,
   RHD = 1
@@ -283,6 +301,24 @@ export class DongleDriver extends EventEmitter {
             extra = Buffer.from(extraData.buffer, extraData.byteOffset, extraData.byteLength)
           }
 
+          if (!SKIP_TYPES.has(header.type)) {
+            const typeHex = '0x' + header.type.toString(16)
+            console.debug('[DongleDriver][RX]', 'type=' + typeHex, 'len=' + header.length)
+
+            if (extra && extra.length > 0) {
+              if (ASCII_TYPES.has(header.type)) {
+                const ascii = extra
+                  .subarray(0, 2048)
+                  .toString('utf8')
+                  .replace(/[^\x20-\x7E]/g, '.')
+                console.debug('[DongleDriver][RX][ASCII]', ascii)
+              } else {
+                // small binary preview only, avoids spam
+                const hex = extra.subarray(0, 96).toString('hex')
+                console.debug('[DongleDriver][RX][HEX]', hex)
+              }
+            }
+          }
           const msg = header.toMessage(extra)
           if (msg) {
             if (msg instanceof VendorCarPlaySessionBlob) {
